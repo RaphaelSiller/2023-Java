@@ -146,6 +146,7 @@ public class TicTacToe {
 	
 	/**
 	 * Ermittelt die Nummer des Spielers der gewonnen hat
+	 * @return Nummer des Spielers, welcher gewonnen hat, bzw. 0, wenn noch kein Sieger feststeht
 	 */
 	public int getGewonnen() {
 		/**
