@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import net.gobbz.geometrischefiguren.*;
 
+@SuppressWarnings("serial")
 public class GeometrischeFigurenGUI extends JFrame{
 	public GeometrischeFigurenGUI() {
 		super("GeometrischeFigurenGUI");

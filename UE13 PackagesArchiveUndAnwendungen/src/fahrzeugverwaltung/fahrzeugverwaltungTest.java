@@ -1,5 +1,7 @@
 package fahrzeugverwaltung;
 
+import net.gobbz.TestScanner.TestScannerErweitert;
+
 public class fahrzeugverwaltungTest {
 	public static void main(String[] args) {
 		boolean userStillWorking = true;

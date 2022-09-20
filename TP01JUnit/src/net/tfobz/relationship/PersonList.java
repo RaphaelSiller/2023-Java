@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public class PersonList extends ArrayList<Person>
 {
 	public PersonList() {

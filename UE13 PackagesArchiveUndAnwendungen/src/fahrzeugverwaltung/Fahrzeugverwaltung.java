@@ -1,14 +1,18 @@
 package fahrzeugverwaltung;
 
 import java.util.Vector;
+
+import net.gobbz.TestScanner.TestScannerErweitert;
 import net.gobbz.fahrzeuge.*;
 
 public class Fahrzeugverwaltung {
+	@SuppressWarnings("rawtypes")
 	private Vector garage = new Vector();
 
 	/**
 	 * Methode zum erstellen/einfuegen eines Fahrzeuges in die Verwaltung
 	 */
+	@SuppressWarnings("unchecked")
 	public void eingeben() {
 		// Interface
 		System.out.println();
@@ -274,6 +278,7 @@ public class Fahrzeugverwaltung {
 	/**
 	 * Gibt alle gespeicherten Fahrzeuge in einer Liste aus
 	 */
+	@SuppressWarnings("rawtypes")
 	public void liste() {
 		java.util.Enumeration e = garage.elements();
 		int i = 0;

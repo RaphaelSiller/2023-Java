@@ -1,11 +1,9 @@
 package net.gobbz.tictactoe;
 
-import java.util.Iterator;
-
 public class TicTacToe {
 	public static final int SPIELER1=-1, SPIELER2=-2;
 	public int feldgroesse;
-	private int[][] Spielfeld;
+	private int[][] spielfeld;
 
 	/**
 	 * Konstruktor initialisiert das Spielfeld mit Zahlen beginnend bei 0. Ist die
@@ -20,10 +18,10 @@ public class TicTacToe {
 			feldgroesse=3;
 		this.feldgroesse = feldgroesse;
 		
-		Spielfeld = new int[feldgroesse][feldgroesse];
+		spielfeld = new int[feldgroesse][feldgroesse];
 		for(int i = 0; i < feldgroesse; i++) {
 			for(int j = 0; j < feldgroesse; j++) {
-				Spielfeld[i][j] = i*3+j;
+				spielfeld[i][j] = i*feldgroesse+j;
 			}
 		}
 	}
@@ -44,7 +42,7 @@ public class TicTacToe {
 		
 		for(int i = 0; i < this.feldgroesse; i++) {
 			for(int j = 0; j < this.feldgroesse; j++) {
-				switch (Spielfeld[i][j]) {
+				switch (spielfeld[i][j]) {
 				case -2:
 					ret+="O";
 					break;
@@ -54,7 +52,7 @@ public class TicTacToe {
 					break;
 
 				default:
-					ret+=Spielfeld[i][j];
+					ret+=spielfeld[i][j];
 					break;
 				}
 			}
@@ -80,11 +78,12 @@ public class TicTacToe {
 	 * 		SPIELER2 falls an der �bergebenen Position der zweite Spieler gesetzt hat
 	 * 		-3 falls zeile und/oder spalte au�erhalb des Spielfeldes zugreifen wollen
 	 */
+	@SuppressWarnings("static-access")
 	public int getSpielfeld(int zeile, int spalte) {
 		if (zeile >= this.feldgroesse || spalte >= this.feldgroesse)
 			return -3;
 		
-		switch (this.Spielfeld[zeile][spalte]) {
+		switch (this.spielfeld[zeile][spalte]) {
 		case -1:
 			return this.SPIELER1;
 			
@@ -105,7 +104,7 @@ public class TicTacToe {
 	 * 	-1 falls der Zug au�erhalb des Spielfeldes liegt
 	 * 	-2 falls der Zug bereits gesetzt wurde
 	 */
-	private int setZug(int zug, int spielernummer) {
+	public int setZug(int zug, int spielernummer) {
 		int zeile = zug / this.feldgroesse;
 		int spalte = zug % feldgroesse;
 		//Zug ausserhalb Feldgroesse
@@ -113,10 +112,10 @@ public class TicTacToe {
 			return -1;
 		
 		//Zug bereits gesetzt
-		if(this.Spielfeld[zeile][spalte] == -1 || this.Spielfeld[zeile][spalte] == -2)
+		if(this.spielfeld[zeile][spalte] == -1 || this.spielfeld[zeile][spalte] == -2)
 			return -2;
 		
-		this.Spielfeld[zeile][spalte] = spielernummer;
+		this.spielfeld[zeile][spalte] = (spielernummer == 1 ? SPIELER1 : SPIELER2);
 		return 0;
 	}
 	
@@ -128,6 +127,7 @@ public class TicTacToe {
 	 * 	-1 falls der Zug au�erhalb des Spielfeldes liegt
 	 * 	-2 falls der Zug bereits gesetzt wurde
 	 */
+	@SuppressWarnings("static-access")
 	public int setZugSpieler1(int zug) {
 		return this.setZug(zug, this.SPIELER1);
 	}
@@ -140,6 +140,7 @@ public class TicTacToe {
 	 * 	-1 falls der Zug au�erhalb des Spielfeldes liegt
 	 * 	-2 falls der Zug bereits gesetzt wurde
 	 */
+	@SuppressWarnings("static-access")
 	public int setZugSpieler2(int zug) {
 		return this.setZug(zug, this.SPIELER2);
 	}
@@ -148,23 +149,50 @@ public class TicTacToe {
 	 * Ermittelt die Nummer des Spielers der gewonnen hat
 	 * @return Nummer des Spielers, welcher gewonnen hat, bzw. 0, wenn noch kein Sieger feststeht
 	 */
+	@SuppressWarnings("static-access")
 	public int getGewonnen() {
 		/**
 		 * Dies funktioniert, da nur Felder, die von Spielern belegt wurden einen gleichen Integer haben können
 		 */
-		for(int i = 0; i < this.feldgroesse-2; i++) {
-			for(int j = 0; j < this.feldgroesse-2; j++) {
-				//Horizontal
-				if(this.Spielfeld[i][j] == this.Spielfeld[i+1][j] &&this.Spielfeld[i][j] == this.Spielfeld[i+2][j])
-					return this.Spielfeld[i][j];
+		for(int i = 0; i < this.feldgroesse; i++) {
+			for(int j = 0; j < this.feldgroesse; j++) {
+				/*
+				 //Horizontal
+				if(this.spielfeld[i][j] == this.spielfeld[i+1][j] &&this.spielfeld[i][j] == this.spielfeld[i+2][j])
+					return this.spielfeld[i][j];
 				
 				//Vertikal
-				if(this.Spielfeld[i][j] == this.Spielfeld[i][j+1] &&this.Spielfeld[i][j] == this.Spielfeld[i][j+2])
-					return this.Spielfeld[i][j];
+				if(this.spielfeld[i][j] == this.spielfeld[i][j+1] &&this.spielfeld[i][j] == this.spielfeld[i][j+2])
+					return this.spielfeld[i][j];
 				
 				//Diagonal
-				if(this.Spielfeld[i][j] == this.Spielfeld[i+1][j+1] &&this.Spielfeld[i][j] == this.Spielfeld[i+2][j+2])
-					return this.Spielfeld[i][j];
+				if(this.spielfeld[i][j] == this.spielfeld[i+1][j+1] &&this.spielfeld[i][j] == this.spielfeld[i+2][j+2])
+					return this.spielfeld[i][j];
+				 */
+				
+				//Horizontal
+				if(i < this.feldgroesse-2 && this.spielfeld[i][j] == this.SPIELER1 && this.spielfeld[i+1][j] == this.SPIELER1 && this.spielfeld[i+2][j] == this.SPIELER1)
+					return this.SPIELER1;
+
+				//Vertikal
+				if(j < this.feldgroesse-2 && this.spielfeld[i][j] == this.SPIELER1 && this.spielfeld[i][j+1] == this.SPIELER1 && this.spielfeld[i][j+2] == this.SPIELER1)
+					return this.SPIELER1;
+
+				//Diagonal
+				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 &&this.spielfeld[i][j] == this.SPIELER1 && this.spielfeld[i+1][j+1] == this.SPIELER1 && this.spielfeld[i+2][j+2] == this.SPIELER1)
+					return this.SPIELER1;
+
+				//Horizontal
+				if(i < this.feldgroesse-2 && this.spielfeld[i][j] == this.SPIELER2 && this.spielfeld[i+1][1] == this.SPIELER2 && this.spielfeld[i+2][j] == this.SPIELER2)
+					return this.SPIELER2;
+
+				//Vertikal
+				if(j < this.feldgroesse-2 &&this.spielfeld[i][j] == this.SPIELER2 && this.spielfeld[i][j+1] == this.SPIELER2 && this.spielfeld[i][j+2] == this.SPIELER2)
+					return this.SPIELER2;
+
+				//Diagonal
+				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 &&this.spielfeld[i][j] == this.SPIELER2 && this.spielfeld[i+1][j+1] == this.SPIELER2 && this.spielfeld[i+2][j+2] == this.SPIELER2)
+					return this.SPIELER2;
 			}
 		}
 		return 0;
@@ -175,18 +203,18 @@ public class TicTacToe {
 	 * @return true falls das Spiel noch gewonnen werden kann
 	 */
 	public boolean getEinerKannGewinnen() {
-		for(int i = 0; i < this.feldgroesse-2; i++) {
-			for(int j = 0; j < this.feldgroesse-2; j++) {
+		for(int i = 0; i < this.feldgroesse; i++) {
+			for(int j = 0; j < this.feldgroesse; j++) {
 				//Horizontal
-				if(this.Spielfeld[i][j] >= 0 && this.Spielfeld[i+1][j] >= 0 && this.Spielfeld[i+2][j] >= 0)
+				if(i < this.feldgroesse-2&&this.spielfeld[i][j] > 0 && this.spielfeld[i+1][j] > 0 && this.spielfeld[i+2][j] > 0)
 					return true;
 				
 				//Vertikal
-				if(this.Spielfeld[i][j] >= 0 && this.Spielfeld[i][j+1] >= 0 && this.Spielfeld[i][j+2] >= 0)
+				if(j < this.feldgroesse-2 &&this.spielfeld[i][j] > 0 && this.spielfeld[i][j+1] > 0 && this.spielfeld[i][j+2] > 0)
 					return true;
 				
 				//Diagonal
-				if(this.Spielfeld[i][j] >= 0 && this.Spielfeld[i+1][j+1] >= 0 && this.Spielfeld[i+2][j+2] >= 0)
+				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 &&this.spielfeld[i][j] > 0 && this.spielfeld[i+1][j+1] > 0 && this.spielfeld[i+2][j+2] > 0)
 					return true;
 			}
 		}

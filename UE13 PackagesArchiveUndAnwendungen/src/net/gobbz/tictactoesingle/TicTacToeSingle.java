@@ -1,4 +1,6 @@
 package net.gobbz.tictactoesingle;
+import net.gobbz.TestScanner.TestScannerErweitert;
+import net.gobbz.tictactoe.*;
 
 public class TicTacToeSingle {
 
@@ -48,6 +50,7 @@ public class TicTacToeSingle {
 				}
 				//Soll noch eine Runde gestartet werden?
 				isGameRunning = (TestScannerErweitert.readChar("Noch ein Spiel (j/n)? ") == 'j' ? true : false);
+				feld = new TicTacToe(3); //Ersetze aktuelles Spielfeld mit einem neuen
 			}
 			//Spielerwechsel
 			Spieler1isActive = !Spieler1isActive;

@@ -10,6 +10,7 @@ public class Person
 	protected String name = null;
 	protected Person mother = null;
 	protected Person father = null;
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ArrayList<Person> children = new ArrayList();
 
 	public Gender getGender() {
