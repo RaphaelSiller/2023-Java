@@ -2,6 +2,7 @@ package net.tfobz.relationship;
 
 import org.junit.Test;
 import org.junit.jupiter.api.*;
+
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,18 +24,18 @@ public class PersonTest
 	Person father = new Person("Vater Faust", Gender.MALE);
 	Person children = new Person("Kind Mephisto", Gender.MALE);
 	Person daughter= new Person("Tochter Mephisto", Gender.FEMALE);
-	Person sons = new Person("Sohn Mephisto", Gender.MALE);
-
+	Person son = new Person("Sohn Mephisto", Gender.MALE);
 	
 	@BeforeEach
-	public void before() {
+	void setUp() throws Exception {
 		p1 = new Person("Gott", Gender.FEMALE);
 		mother = new Person("Mutter Gretchen", Gender.FEMALE);
 		father = new Person("Vater Faust", Gender.MALE);
 		children = new Person("Kind Mephisto", Gender.MALE);
 		daughter= new Person("Tochter Mephisto", Gender.FEMALE);
-		sons = new Person("Sohn Mephisto", Gender.MALE);
+		son = new Person("Sohn Mephisto", Gender.MALE);
 	}
+	
 	/**
 	 * Tested ob bei Konstruktor die Parameter richtig gesetzt werden
 	 * 
@@ -187,7 +188,47 @@ public class PersonTest
 		assertThrows(IndexOutOfBoundsException.class,() -> p.getSons().get(0));
 		assertThrows(IndexOutOfBoundsException.class,() -> p.getDaughters().get(0));
 		
-		//TODO normal Kontrolle
+		son.setFather(father);
+		assertTrue(father.getSons().contains(son));
+		daughter.setFather(father);
+		assertTrue(father.getDaughters().contains(daughter));
+		
+		son.setMother(mother);
+		assertTrue(mother.getSons().contains(son));
+		daughter.setMother(mother);
+		assertTrue(mother.getDaughters().contains(daughter));
+	}
+	
+	@Test
+	public void sistersBrothers() {
+		daughter.setFather(father);
+		daughter.setMother(mother);
+		son.setFather(father);
+		son.setMother(mother);
+		assertTrue(son.getSisters().contains(daughter));
+		assertTrue(daughter.getBrothers().contains(son));
+	}
+	
+	@Test
+	public void descendants() {
+		Person firstGenFather = new Person("", Gender.MALE);
+		Person firstGenMother = new Person("", Gender.MALE);
+		Person secondGenFather = new Person("", Gender.MALE);
+		Person secondGenMother = new Person("", Gender.MALE);
+		Person thirdGenFather = new Person("", Gender.MALE);
+		Person thirdGenMother = new Person("", Gender.MALE);
+		
+		secondGenFather.setFather(firstGenFather);
+		secondGenFather.setMother(firstGenMother);
+		secondGenMother.setFather(firstGenFather);
+		secondGenMother.setMother(firstGenMother);
+
+		thirdGenFather.setFather(secondGenFather);
+		thirdGenFather.setMother(secondGenMother);
+		thirdGenMother.setFather(secondGenFather);
+		thirdGenMother.setMother(secondGenMother);
+		
+		//TODO add Asserts
 	}
 	
 	

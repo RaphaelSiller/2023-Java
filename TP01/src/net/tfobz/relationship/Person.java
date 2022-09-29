@@ -2,8 +2,7 @@ package net.tfobz.relationship;
 
 import java.util.ArrayList;
 
-public class Person
-{
+public class Person {
 	public enum Gender {
 		FEMALE, MALE
 	};
@@ -59,14 +58,20 @@ public class Person
 		return mother;
 	}
 
+	/**
+	 * Setzt die Mutter auf übergebene Person.
+	 * Außerdem wird bei der Mutter diese Person aus den Kindern gelöscht und bei neuer Mutter eingefügt
+	 * @param mother
+	 * @throws IllegalArgumentException - wenn mother == null oder nicht weiblich ist
+	 */
 	public void setMother(Person mother) throws IllegalArgumentException {
 		if (mother != null && mother.gender != Gender.FEMALE)
 			throw new IllegalArgumentException();
-		
-		//Entfernen des Kindes bei alter Mutter
+
+		// Entfernen des Kindes bei alter Mutter
 		if (this.mother != null)
 			this.mother.children.remove(this);
-		
+
 		this.mother = mother;
 		// Hinzuügen des Kindes bei neuer Mutter
 		if (this.mother != null)
@@ -77,6 +82,12 @@ public class Person
 		return father;
 	}
 
+	/**
+	 * Setzt den Vater auf übergebene Person.
+	 * Außerdem wird beim Vater diese Person aus den Kindern gelöscht und bei neuem Vater eingefügt
+	 * @param father
+	 * @throws IllegalArgumentException - wenn father == null oder nicht Männlich ist
+	 */
 	public void setFather(Person father) throws IllegalArgumentException {
 		if (father != null && father.gender != Gender.MALE)
 			throw new IllegalArgumentException();
@@ -92,26 +103,121 @@ public class Person
 			this.father.children.add(this);
 	}
 
+	/**
+	 * Gibt alle Kinder zurück.
+	 * Wenn keine Kinder existieren, wird ein leeres ArrayList<Person> zurückgegeben
+	 * @return alle Kinder
+	 */
 	public ArrayList<Person> getChildren() {
 		return children;
 	}
-	
+
+	/**
+	 * Gibt alle Söhne zurück.
+	 * Wenn keine Söhne existieren, wird ein leeres ArrayList<Person> zurückgegeben
+	 * @return alle Söhne
+	 */
 	public ArrayList<Person> getSons() {
 		ArrayList<Person> sons = new ArrayList<Person>();
 		children.forEach(child -> {
-			if(child.getGender() == Gender.MALE)
+			if (child.getGender() == Gender.MALE)
 				sons.add(child);
 		});
 		return sons;
 	}
 	
+	/**
+	 * Gibt alle Töchter zurück.
+	 * Wenn keine Töchter existieren, wird ein leeres ArrayList<Person> zurückgegeben
+	 * @return alle Töchter
+	 */
 	public ArrayList<Person> getDaughters() {
 		ArrayList<Person> daughters = new ArrayList<Person>();
 		children.forEach(child -> {
-			if(child.getGender() == Gender.MALE)
+			if (child.getGender() == Gender.FEMALE)
 				daughters.add(child);
 		});
 		return daughters;
+	}
+
+	/**
+	 * Gibt alle Brüder zurück, d.h. alle Söhne vom Vater, welche auch Söhne von der
+	 * Mutter sind.
+	 * Wenn ein Elternteil fehlt, wird ein leeres ArrayList<Person> zurückgegeben.
+	 * 
+	 * @return alle Brüder
+	 */
+	public ArrayList<Person> getBrothers() {
+
+		// List of all sons from Father which are also sons from Mother
+		ArrayList<Person> brothers = new ArrayList<Person>();
+
+		if (this.getFather() == null || this.getMother() == null)
+			return brothers;
+
+		// Wenn ein Elternteil fehlt, wird leeres ArrayList zurückgegeben
+		ArrayList<Person> sonsOfFather = this.getFather().getSons();
+		ArrayList<Person> sonsOfMother = this.getMother().getSons();
+
+		// Fasse alle Söhne von Vater zusammen, welche auch Sohn von Mutter sind
+		sonsOfFather.forEach((son) -> {
+			if (sonsOfMother.contains(son))
+				brothers.add(son);
+		});
+
+		// Ich glaube nicht dass man sein eigener Bruder ist, oder?
+		brothers.remove(this);
+
+		return brothers;
+	}
+
+	/**
+	 * Gibt alle Schwestern zurück, d.h. alle Töchter vom Vater, welche auch Töchter
+	 * von der Mutter sind.
+	 * Wenn ein Elternteil fehlt, wird ein leeres ArrayList<Person> zurückgegeben.
+	 * 
+	 * @return alle Schwestern
+	 */
+	public ArrayList<Person> getSisters() {
+		// List of all sons from Father which are also sons from Mother
+		ArrayList<Person> daughters = new ArrayList<Person>();
+
+		// Wenn ein Elternteil fehlt, wird leeres ArrayList zurückgegeben
+		if (this.getFather() == null || this.getMother() == null)
+			return daughters;
+
+		ArrayList<Person> daughtersOfFather = this.getFather().getDaughters();
+		ArrayList<Person> daughtersOfMother = this.getMother().getDaughters();
+
+		// Fasse alle Töchter von Vater zusammen, welche auch Tochter von Mutter sind
+		daughtersOfFather.forEach((daughter) -> {
+			if (daughtersOfMother.contains(daughter))
+				daughters.add(daughter);
+		});
+
+		// Ich glaube nicht dass man seine eigene Schwester ist, oder?
+		daughters.remove(this);
+
+		return daughters;
+	}
+	
+	public ArrayList<Person> getDescendants() {
+		//Bekomme alle Kinder rekursiv
+		if (children.isEmpty())
+			return children;
+		ArrayList<Person> descendantsDuplicated = new ArrayList<Person>();
+		children.forEach((child) -> {
+			descendantsDuplicated.addAll(child.getDescendants());
+		});
+		
+		ArrayList<Person> descendants = new ArrayList<Person>();
+		
+		//Remove Duplicates
+		descendantsDuplicated.forEach((descendant) -> {
+			if (!descendants.contains(descendant))
+				descendants.add(descendant);
+		});
+		return descendants;
 	}
 
 	public boolean equals(Person pers1) throws IllegalArgumentException {
