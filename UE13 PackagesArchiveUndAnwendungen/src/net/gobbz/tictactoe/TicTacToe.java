@@ -106,7 +106,7 @@ public class TicTacToe {
 	 */
 	public int setZug(int zug, int spielernummer) {
 		int zeile = zug / this.feldgroesse;
-		int spalte = zug % feldgroesse;
+		int spalte = zug % this.feldgroesse;
 		//Zug ausserhalb Feldgroesse
 		if (zeile >= this.feldgroesse || spalte >= this.feldgroesse)
 			return -1;

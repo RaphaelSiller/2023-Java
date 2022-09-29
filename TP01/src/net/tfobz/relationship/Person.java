@@ -96,8 +96,22 @@ public class Person
 		return children;
 	}
 	
+	public ArrayList<Person> getSons() {
+		ArrayList<Person> sons = new ArrayList<Person>();
+		children.forEach(child -> {
+			if(child.getGender() == Gender.MALE)
+				sons.add(child);
+		});
+		return sons;
+	}
+	
 	public ArrayList<Person> getDaughters() {
-		return children;
+		ArrayList<Person> daughters = new ArrayList<Person>();
+		children.forEach(child -> {
+			if(child.getGender() == Gender.MALE)
+				daughters.add(child);
+		});
+		return daughters;
 	}
 
 	public boolean equals(Person pers1) throws IllegalArgumentException {
@@ -114,7 +128,7 @@ public class Person
 		 * false;
 		 */
 		if (this.gender == pers1.gender && this.name == pers1.name && this.mother == pers1.mother
-				&& this.father == pers1.father && this.children == pers1.children)
+				&& this.father == pers1.father)
 			return true;
 		else
 			return false;
