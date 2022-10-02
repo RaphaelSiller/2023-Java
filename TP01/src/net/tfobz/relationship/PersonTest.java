@@ -1,12 +1,19 @@
 package net.tfobz.relationship;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import net.tfobz.relationship.Person.Gender;
 
@@ -19,15 +26,15 @@ import net.tfobz.relationship.Person.Gender;
 @SuppressWarnings("unused")
 public class PersonTest
 {
-	Person p1 = new Person("Gott", Gender.FEMALE);
-	Person mother = new Person("Mutter Gretchen", Gender.FEMALE);
-	Person father = new Person("Vater Faust", Gender.MALE);
-	Person children = new Person("Kind Mephisto", Gender.MALE);
-	Person daughter= new Person("Tochter Mephisto", Gender.FEMALE);
-	Person son = new Person("Sohn Mephisto", Gender.MALE);
+	public static Person p1 = new Person("Gott", Gender.FEMALE);
+	public static Person mother = new Person("Mutter Gretchen", Gender.FEMALE);
+	public static Person father = new Person("Vater Faust", Gender.MALE);
+	public static Person children = new Person("Kind Mephisto", Gender.MALE);
+	public static Person daughter= new Person("Tochter Mephisto", Gender.FEMALE);
+	public static Person son = new Person("Sohn Mephisto", Gender.MALE);
 	
-	@BeforeEach
-	void setUp() throws Exception {
+	@BeforeAll
+	public static void setup() {
 		p1 = new Person("Gott", Gender.FEMALE);
 		mother = new Person("Mutter Gretchen", Gender.FEMALE);
 		father = new Person("Vater Faust", Gender.MALE);
@@ -35,6 +42,16 @@ public class PersonTest
 		daughter= new Person("Tochter Mephisto", Gender.FEMALE);
 		son = new Person("Sohn Mephisto", Gender.MALE);
 	}
+	
+//	@BeforeEach
+//	void setUp() throws Exception {
+//		p1 = new Person("Gott", Gender.FEMALE);
+//		mother = new Person("Mutter Gretchen", Gender.FEMALE);
+//		father = new Person("Vater Faust", Gender.MALE);
+//		children = new Person("Kind Mephisto", Gender.MALE);
+//		daughter= new Person("Tochter Mephisto", Gender.FEMALE);
+//		son = new Person("Sohn Mephisto", Gender.MALE);
+//	}
 	
 	/**
 	 * Tested ob bei Konstruktor die Parameter richtig gesetzt werden
@@ -184,9 +201,10 @@ public class PersonTest
 	public void daughtersSons() {
 		Person p = new Person("Kal El", Gender.MALE);
 		
-		//Wenn es nicht ein instanziiertes Array wäre, würde es einen anderen Fehler werden
+		//Wenn es nicht ein instanziiertes Array wäre, würde es einen anderen Fehler werfen
 		assertThrows(IndexOutOfBoundsException.class,() -> p.getSons().get(0));
 		assertThrows(IndexOutOfBoundsException.class,() -> p.getDaughters().get(0));
+		
 		
 		son.setFather(father);
 		assertTrue(father.getSons().contains(son));
@@ -201,22 +219,32 @@ public class PersonTest
 	
 	@Test
 	public void sistersBrothers() {
+		//Normale Arbeitsweise (keine Edge-Cases)
 		daughter.setFather(father);
 		daughter.setMother(mother);
 		son.setFather(father);
 		son.setMother(mother);
 		assertTrue(son.getSisters().contains(daughter));
 		assertTrue(daughter.getBrothers().contains(son));
+		
+		//Half-siblings shouldn't be returned
+		daughter.setFather(null);
+		assertFalse(son.getSisters().contains(daughter));
+		
+		//If one parent is missing, method needs to return empty ArrayList
+		assertTrue(daughter.getBrothers().isEmpty());
+		assertTrue(daughter.getSisters().isEmpty());
 	}
 	
 	@Test
 	public void descendants() {
-		Person firstGenFather = new Person("", Gender.MALE);
-		Person firstGenMother = new Person("", Gender.MALE);
-		Person secondGenFather = new Person("", Gender.MALE);
-		Person secondGenMother = new Person("", Gender.MALE);
-		Person thirdGenFather = new Person("", Gender.MALE);
-		Person thirdGenMother = new Person("", Gender.MALE);
+		//Setup
+		Person firstGenFather = new Person("firstGenFather", Gender.MALE);
+		Person firstGenMother = new Person("firstGenMother", Gender.FEMALE);
+		Person secondGenFather = new Person("secondGenFather", Gender.MALE);
+		Person secondGenMother = new Person("secondGenMother", Gender.FEMALE);
+		Person thirdGenFather = new Person("thirdGenFather", Gender.MALE);
+		Person thirdGenMother = new Person("thirdGenMother", Gender.FEMALE);
 		
 		secondGenFather.setFather(firstGenFather);
 		secondGenFather.setMother(firstGenMother);
@@ -228,8 +256,45 @@ public class PersonTest
 		thirdGenMother.setFather(secondGenFather);
 		thirdGenMother.setMother(secondGenMother);
 		
-		//TODO add Asserts
+		//Normale Arbeitsweise (keine Edge-Cases)
+		ArrayList<Person> descendantsOfFirstGenMother = firstGenMother.getDescendants();
+		System.out.println(descendantsOfFirstGenMother);
+		assertTrue(descendantsOfFirstGenMother.contains(thirdGenMother));
+		assertTrue(descendantsOfFirstGenMother.contains(secondGenFather));
+		
+		//Du bist nicht dein eigener Nachfahre
+		assertFalse(descendantsOfFirstGenMother.contains(firstGenMother));
+		
+		//Erstelle ein Set (A collection that contains no duplicate elements)
+		// Wenn das Set kleiner ist, heißt dass, das die Liste Duplikate enthält
+		Set<Person> setDescendantsOfFirstGenMother = new HashSet<Person>(descendantsOfFirstGenMother);
+		assertFalse(setDescendantsOfFirstGenMother.size() < descendantsOfFirstGenMother.size());
 	}
 	
+	@Test
+	//Du darfst nicht dein eigenes Elternteil sein
+	public void parentOfHimself() {
+		//Normale Arbeitsweise (keine Edge-Cases)
+		assertThrows(IllegalArgumentException.class, () -> {
+			father.setFather(father);
+		});
+		assertThrows(IllegalArgumentException.class, () -> {
+			mother.setMother(mother);
+		});
+	}
 	
+	@Test
+	//Time Travel Shenanigans are not allowed
+	//Deine Eltern dürfen nicht deine Nachfahren sein
+	public void parentIsDescendant() {
+		//Normale Arbeitsweise (keine Edge-Cases)
+		son.setFather(father);
+		daughter.setMother(mother);
+		assertThrows(IllegalArgumentException.class, () -> {
+			father.setFather(son);
+		});
+		assertThrows(IllegalArgumentException.class, () -> {
+			mother.setMother(daughter);
+		});
+	}
 }

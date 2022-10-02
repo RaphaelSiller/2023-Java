@@ -59,13 +59,17 @@ public class Person {
 	}
 
 	/**
-	 * Setzt die Mutter auf übergebene Person.
-	 * Außerdem wird bei der Mutter diese Person aus den Kindern gelöscht und bei neuer Mutter eingefügt
+	 * Setzt die Mutter auf übergebene Person. Außerdem wird bei der Mutter diese
+	 * Person aus den Kindern gelöscht und bei neuer Mutter eingefügt
+	 * 
 	 * @param mother
-	 * @throws IllegalArgumentException - wenn mother == null oder nicht weiblich ist
+	 * @throws IllegalArgumentException - nicht weiblich ist 
+	 * 									- mother gleich sich selbst ist
+	 * 									- mother ein Nachfahre ist
 	 */
 	public void setMother(Person mother) throws IllegalArgumentException {
-		if (mother != null && mother.gender != Gender.FEMALE)
+		//Wenn mother == null braucht es keine Überprufung auf Illegale Argumente machen
+		if (mother != null && (mother.gender != Gender.FEMALE || this.equals(mother) || this.getDescendants().contains(mother)))
 			throw new IllegalArgumentException();
 
 		// Entfernen des Kindes bei alter Mutter
@@ -83,13 +87,17 @@ public class Person {
 	}
 
 	/**
-	 * Setzt den Vater auf übergebene Person.
-	 * Außerdem wird beim Vater diese Person aus den Kindern gelöscht und bei neuem Vater eingefügt
+	 * Setzt den Vater auf übergebene Person. Außerdem wird beim Vater diese Person
+	 * aus den Kindern gelöscht und bei neuem Vater eingefügt
+	 * 
 	 * @param father
-	 * @throws IllegalArgumentException - wenn father == null oder nicht Männlich ist
+	 * @throws IllegalArgumentException - nicht männlich ist 
+	 * 									- father gleich sich selbst ist
+	 * 									- father ein Nachfahre ist
 	 */
 	public void setFather(Person father) throws IllegalArgumentException {
-		if (father != null && father.gender != Gender.MALE)
+		//Wenn father == null braucht es keine Überprufung auf Illegale Argumente machen
+		if (father != null && (father.gender != Gender.MALE || this.equals(father) || this.getDescendants().contains(father)))
 			throw new IllegalArgumentException();
 
 		// Entfernen des Kindes bei altem Vater
@@ -104,8 +112,9 @@ public class Person {
 	}
 
 	/**
-	 * Gibt alle Kinder zurück.
-	 * Wenn keine Kinder existieren, wird ein leeres ArrayList<Person> zurückgegeben
+	 * Gibt alle Kinder zurück. Wenn keine Kinder existieren, wird ein leeres
+	 * ArrayList<Person> zurückgegeben
+	 * 
 	 * @return alle Kinder
 	 */
 	public ArrayList<Person> getChildren() {
@@ -113,8 +122,9 @@ public class Person {
 	}
 
 	/**
-	 * Gibt alle Söhne zurück.
-	 * Wenn keine Söhne existieren, wird ein leeres ArrayList<Person> zurückgegeben
+	 * Gibt alle Söhne zurück. Wenn keine Söhne existieren, wird ein leeres
+	 * ArrayList<Person> zurückgegeben
+	 * 
 	 * @return alle Söhne
 	 */
 	public ArrayList<Person> getSons() {
@@ -125,10 +135,11 @@ public class Person {
 		});
 		return sons;
 	}
-	
+
 	/**
-	 * Gibt alle Töchter zurück.
-	 * Wenn keine Töchter existieren, wird ein leeres ArrayList<Person> zurückgegeben
+	 * Gibt alle Töchter zurück. Wenn keine Töchter existieren, wird ein leeres
+	 * ArrayList<Person> zurückgegeben
+	 * 
 	 * @return alle Töchter
 	 */
 	public ArrayList<Person> getDaughters() {
@@ -142,8 +153,8 @@ public class Person {
 
 	/**
 	 * Gibt alle Brüder zurück, d.h. alle Söhne vom Vater, welche auch Söhne von der
-	 * Mutter sind.
-	 * Wenn ein Elternteil fehlt, wird ein leeres ArrayList<Person> zurückgegeben.
+	 * Mutter sind. Wenn ein Elternteil fehlt, wird ein leeres ArrayList<Person>
+	 * zurückgegeben.
 	 * 
 	 * @return alle Brüder
 	 */
@@ -173,8 +184,8 @@ public class Person {
 
 	/**
 	 * Gibt alle Schwestern zurück, d.h. alle Töchter vom Vater, welche auch Töchter
-	 * von der Mutter sind.
-	 * Wenn ein Elternteil fehlt, wird ein leeres ArrayList<Person> zurückgegeben.
+	 * von der Mutter sind. Wenn ein Elternteil fehlt, wird ein leeres
+	 * ArrayList<Person> zurückgegeben.
 	 * 
 	 * @return alle Schwestern
 	 */
@@ -200,23 +211,33 @@ public class Person {
 
 		return daughters;
 	}
-	
-	public ArrayList<Person> getDescendants() {
-		//Bekomme alle Kinder rekursiv
-		if (children.isEmpty())
-			return children;
+
+	public ArrayList<Person> getDescendantsPlusSelf() {
+		// Bekomme alle Kinder rekursiv
+		if (children.isEmpty()) {
+			ArrayList<Person> ret = new ArrayList<Person>();
+			ret.add(this);
+			return ret;
+		}
 		ArrayList<Person> descendantsDuplicated = new ArrayList<Person>();
 		children.forEach((child) -> {
-			descendantsDuplicated.addAll(child.getDescendants());
+			descendantsDuplicated.addAll(child.getDescendantsPlusSelf());
 		});
-		
+
 		ArrayList<Person> descendants = new ArrayList<Person>();
-		
-		//Remove Duplicates
+
+		// Remove Duplicates
 		descendantsDuplicated.forEach((descendant) -> {
 			if (!descendants.contains(descendant))
 				descendants.add(descendant);
 		});
+		descendants.add(this);
+		return descendants;
+	}
+
+	public ArrayList<Person> getDescendants() {
+		ArrayList<Person> descendants = this.getDescendantsPlusSelf();
+		descendants.remove(this);
 		return descendants;
 	}
 
@@ -238,5 +259,9 @@ public class Person {
 			return true;
 		else
 			return false;
+	}
+	
+	public String toString() {
+		return this.name;
 	}
 }

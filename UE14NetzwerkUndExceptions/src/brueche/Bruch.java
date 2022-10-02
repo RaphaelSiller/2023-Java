@@ -35,7 +35,15 @@ public class Bruch {
 			this.nenner /= ggT;
 		}
 	}
-
+	
+	
+	/**
+	 * Source: GeeksForGeeks
+	 * 		   URL: https://www.geeksforgeeks.org/java-program-to-compute-gcd/
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	int getGGT(int a, int b) {
         // stores minimum(a, b)
         int i;
@@ -75,7 +83,7 @@ public class Bruch {
 		try {
 			return new Bruch(this.getZaehler(), this.getNenner());
 		} catch (BruchException e) {
-			System.out.println("Fehler beim Klonen");
+			System.out.println("Wie zur Hölle bist du hier gelandet? Das sollte nicht möglich sein.");
 			return null;
 		}
 	}
