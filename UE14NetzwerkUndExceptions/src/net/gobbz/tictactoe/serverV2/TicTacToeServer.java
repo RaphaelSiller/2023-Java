@@ -1,4 +1,4 @@
-package net.gobbz.tictactoe.server;
+package net.gobbz.tictactoe.serverV2;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,13 +8,15 @@ import java.net.Socket;
 
 import net.gobbz.TestScanner.TestScannerErweitert;
 import net.gobbz.tictactoe.TicTacToe;
+import net.gobbz.tictactoe.gui.TicTacToeJFrame;
 
 public class TicTacToeServer extends TicTacToe {
 
-	private Socket       clientSocket;
+	private Socket          clientSocket;
 	@SuppressWarnings("unused")
-	private static int   FELDGROESSE, PORT;
-	private ServerSocket server;
+	private static int      FELDGROESSE, PORT;
+	private ServerSocket    server;
+	private TicTacToeJFrame gui;
 
 	@SuppressWarnings("static-access")
 	/**
@@ -42,9 +44,12 @@ public class TicTacToeServer extends TicTacToe {
 	 * @param Args
 	 */
 	public static void main(String[] Args) {
-		TicTacToeServer ticTacToeServer = null;
+		TicTacToeServer ticTacToeServer  = null;
+		TicTacToeJFrame ticTacToeFenster = null;
 		try {
 			ticTacToeServer = new TicTacToeServer(3, 60000);
+			ticTacToeFenster = new TicTacToeJFrame("Server", ticTacToeServer);
+			ticTacToeServer.setGui(ticTacToeFenster);
 
 			ticTacToeServer.server = new ServerSocket(60000);
 			ticTacToeServer.behandleClient();
@@ -68,31 +73,33 @@ public class TicTacToeServer extends TicTacToe {
 			System.out.println(super.toString());
 
 			if (Spieler1isActive) {
+				gui.setStatusleistentext("Du bist am Zug");
 				// Abfrage des Spielzuges
-				int zug = -1;
-				do {
-					zug = readInt("1. Spieler: Ihr Zug: ");
-				} while (zug < 0 || zug > feldgroesse * feldgroesse);
-				this.setMeinZug(zug);
+				this.setMeinZug(this.gui.getGewaehlteFeldnummer());
 			} else {
+				gui.setStatusleistentext("Gegner ist am Zug");
 				getGegnerZug();
 			}
+
+			// Spielerwechsel
+			Spieler1isActive = !Spieler1isActive;
 
 			// Kontrolle, ob das Spiel noch weitergehen kann
 			if (super.getGewonnen() != 0 || !super.getEinerKannGewinnen()) {
 				System.out.println(this.toString());
 
 				// Wenn Sieger gewonnen hat
-				if (super.getGewonnen() != 0)
-					System.out.println("Spieler " + (Spieler1isActive ? "1" : "2") + " hat gewonnen!!!");
-				else // Wenn keiner gewonnen hat
+				if (super.getGewonnen() != 0) {
+					gui.setStatusleistentext(Spieler1isActive ? "Gegner hat gewonnen" : "Du hast gewonnen");
+					System.out.println("Spieler " + (Spieler1isActive ? "1" : "0") + " hat gewonnen!!!");
+				} else { // Wenn keiner gewonnen hat
+					gui.setStatusleistentext("Es kann keiner mehr gewinnen");
 					System.out.println("Es kann keiner mehr gewinnen");
+				}
 
 				// Spiel läuft nicht mehr
 				isGameRunning = false;
 			}
-			// Spielerwechsel
-			Spieler1isActive = !Spieler1isActive;
 		}
 		// Schließe alle Sockets
 		this.close();
@@ -121,6 +128,9 @@ public class TicTacToeServer extends TicTacToe {
 
 		out.write(zug);
 		clientSocket.close();
+		gui.setXor0(zug, 'X');
+		;
+		gui.repaint();
 		return super.setZug(zug, SPIELER1);
 	}
 
@@ -140,23 +150,22 @@ public class TicTacToeServer extends TicTacToe {
 	 * @formatter:on
 	 */
 	private int getGegnerZug() throws IOException {
-		// Kontrolliere, ob noch kein Socket offen ist
+		// Kontrolle ob socket noch offen ist
 		if (clientSocket != null && !clientSocket.isClosed())
 			return -3;
-
-		// Erstelle neuen Socket
+		// Neuen Socket erstellen
 		clientSocket = this.server.accept();
+
 		InputStream in = clientSocket.getInputStream();
 
-		// LeseZug
-		int zug = (byte) in.read();
+		int zug = (byte) in.read(); // LeseZug
+		gui.setXor0(zug, '0');
+		gui.repaint();
 		return super.setZug(zug, SPIELER2);
 	}
 
-	@SuppressWarnings("resource")
-	private static int readInt(String text) {
-		System.out.print(text);
-		return new java.util.Scanner(System.in).nextInt();
+	public void setGui(TicTacToeJFrame gui) {
+		this.gui = gui;
 	}
 
 }

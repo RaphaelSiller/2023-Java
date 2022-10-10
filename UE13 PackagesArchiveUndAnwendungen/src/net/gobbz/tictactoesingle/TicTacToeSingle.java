@@ -23,7 +23,7 @@ public class TicTacToeSingle {
 				int zug = TestScannerErweitert.readInt((Spieler1isActive ? "1" : "2") + ". Spieler: Ihr Zug: ");
 				
 				//Setzen des Spielzuges und abspeichern des Rückgabewert
-				status = feld.setZug(zug, (Spieler1isActive ? 1 : 0));
+				status = feld.setZug(zug, (Spieler1isActive ? -1 : -2));
 				
 				//Ausgabe einer Fehlermeldung, falls Rückgabewert vom Spielzugsetzen eine Fehlermeldung ist
 				switch (status) {
@@ -44,7 +44,7 @@ public class TicTacToeSingle {
 			if (feld.getGewonnen() != 0 || !feld.getEinerKannGewinnen()) {
 				//Wenn Sieger gewonnen hat
 				if (feld.getGewonnen() != 0) {
-					System.out.println("Spieler " + (Spieler1isActive ? "1" : "0") + " hat gewonnen!!!");
+					System.out.println("Spieler " + (Spieler1isActive ? "1" : "2") + " hat gewonnen!!!");
 				} else { //Wenn keiner gewonnen hat
 					System.out.println("Es kann keiner mehr gewinnen");
 				}

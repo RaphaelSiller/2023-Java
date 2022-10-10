@@ -1,0 +1,1 @@
+V2 von TicTacToeClient und Server implementieren die GUI, d.h. gehören zur Zusatzaufgabe 11.

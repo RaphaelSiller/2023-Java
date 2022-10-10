@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry kind="lib" path="/home/endroidmc/eclipse-Workspaces/schule-22-23/2023-Java/libraries/TicTacToe.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry exported="true" kind="lib" path="/home/endroidmc/eclipse-Workspaces/schule-22-23/2023-Java/libraries/TestScanner.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

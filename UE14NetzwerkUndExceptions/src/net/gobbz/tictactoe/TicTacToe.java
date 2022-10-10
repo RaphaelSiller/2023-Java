@@ -166,64 +166,64 @@ public class TicTacToe {
 	@SuppressWarnings("static-access")
 	public int getGewonnen() {
 		/**
-		 * Dies funktioniert, da nur Felder, die von Spielern belegt wurden einen
-		 * gleichen Integer haben können
+		 * Kontrolliert, ob im Spielfeld eine Dreiherreihe mit der Nummer eines Spielers
+		 * gibt
 		 */
 		for (int i = 0; i < this.feldgroesse; i++) {
 			for (int j = 0; j < this.feldgroesse; j++) {
 
 				//@formatter:off
 				// → Horizontal
-				if (i < this.feldgroesse - 2 
+				if (i < this.feldgroesse - 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]     == this.SPIELER1
 						&& this.spielfeld[i + 1][j] == this.SPIELER1 
 						&& this.spielfeld[i + 2][j] == this.SPIELER1)
 					return this.SPIELER1;
 
 				// ↓ Vertikal
-				if (j < this.feldgroesse - 2 
+				if (j < this.feldgroesse - 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]     == this.SPIELER1
 						&& this.spielfeld[i][j + 1] == this.SPIELER1 
 						&& this.spielfeld[i][j + 2] == this.SPIELER1)
 					return this.SPIELER1;
 
 				// ↘ Diagonal - nach unten
-				if (i < this.feldgroesse - 2 && j < this.feldgroesse - 2 
+				if (i < this.feldgroesse - 2 && j < this.feldgroesse - 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]         == this.SPIELER1
 						&& this.spielfeld[i + 1][j + 1] == this.SPIELER1
 						&& this.spielfeld[i + 2][j + 2] == this.SPIELER1)
 					return this.SPIELER1;
 				
 				// ↗ Diagonal - nach oben
-				if (i < this.feldgroesse - 2 && j >= 2 
+				if (i < this.feldgroesse - 2 && j >= 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]         == this.SPIELER1
 						&& this.spielfeld[i + 1][j - 1] == this.SPIELER1
 						&& this.spielfeld[i + 2][j - 2] == this.SPIELER1)
 					return this.SPIELER1;
 
 				// → Horizontal
-				if (i < this.feldgroesse - 2 
+				if (i < this.feldgroesse - 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]     == this.SPIELER2
 						&& this.spielfeld[i + 1][j] == this.SPIELER2 
 						&& this.spielfeld[i + 2][j] == this.SPIELER2)
 					return this.SPIELER2;
 
 				// ↓ Vertikal
-				if (j < this.feldgroesse - 2 
+				if (j < this.feldgroesse - 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]     == this.SPIELER2
 						&& this.spielfeld[i][j + 1] == this.SPIELER2 
 						&& this.spielfeld[i][j + 2] == this.SPIELER2)
 					return this.SPIELER2;
 
 				// ↘ Diagonal - nach unten
-				if (i < this.feldgroesse - 2 && j < this.feldgroesse - 2 
+				if (i < this.feldgroesse - 2 && j < this.feldgroesse - 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]         == this.SPIELER2
 						&& this.spielfeld[i + 1][j + 1] == this.SPIELER2
 						&& this.spielfeld[i + 2][j + 2] == this.SPIELER2)
 					return this.SPIELER2;
 					
 				// ↗ Diagonal - nach oben
-				if (i < this.feldgroesse - 2 && j >= 2 
+				if (i < this.feldgroesse - 2 && j >= 2 // Vorbeugung IndexOutOfBoundsException
 						&& this.spielfeld[i][j]         == this.SPIELER2
 						&& this.spielfeld[i + 1][j - 1] == this.SPIELER2
 						&& this.spielfeld[i + 2][j - 2] == this.SPIELER2)
@@ -241,33 +241,36 @@ public class TicTacToe {
 	 * @return true falls das Spiel noch gewonnen werden kann
 	 */
 	public boolean getEinerKannGewinnen() {
-
+		/**
+		 * Geht jede mögliche Dreierkombination im Spielfeld durch und schaut, ob die 3
+		 * Felder entweder von Spieler1/Spieler2 besetzt oder unbesetzt sind.
+		 */
 		for (int i = 0; i < this.feldgroesse; i++) {
 			for (int j = 0; j < this.feldgroesse; j++) {
 				//@formatter:off
 				// → Horizontal
-				if(i < this.feldgroesse-2
+				if(i < this.feldgroesse-2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]   >= 0 || this.spielfeld[i][j]   == SPIELER1) 
 						&& (this.spielfeld[i+1][j] >= 0 || this.spielfeld[i+1][j] == SPIELER1) 
 						&& (this.spielfeld[i+2][j] >= 0 || this.spielfeld[i+2][j] == SPIELER1))
 					return true;
 
 				// ↓ Vertikal
-				if(j < this.feldgroesse-2 
+				if(j < this.feldgroesse-2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]   >= 0 || this.spielfeld[i][j]   == SPIELER1)
 						&& (this.spielfeld[i][j+1] >= 0 || this.spielfeld[i][j+1] == SPIELER1) 
 						&& (this.spielfeld[i][j+2] >= 0 || this.spielfeld[i][j+2] == SPIELER1))
 					return true;
 
 				// ↘ Diagonal - nach unten
-				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 
+				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]     >= 0 || this.spielfeld[i][j]     == SPIELER1) 
 						&& (this.spielfeld[i+1][j+1] >= 0 || this.spielfeld[i+1][j+1] == SPIELER1) 
 						&& (this.spielfeld[i+2][j+2] >= 0 || this.spielfeld[i+2][j+2] == SPIELER1))
 					return true;
 				
 				// ↗ Diagonal - nach oben
-				if(i < this.feldgroesse-2 && j > 2 
+				if(i < this.feldgroesse-2 && j > 2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]     >= 0 || this.spielfeld[i][j]     == SPIELER1) 
 						&& (this.spielfeld[i+1][j+1] >= 0 || this.spielfeld[i+1][j-1] == SPIELER1) 
 						&& (this.spielfeld[i+2][j+2] >= 0 || this.spielfeld[i+2][j-2] == SPIELER1))
@@ -275,28 +278,28 @@ public class TicTacToe {
 				
 				
 				// → Horizontal
-				if(i < this.feldgroesse-2
+				if(i < this.feldgroesse-2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]   >= 0 || this.spielfeld[i][j]   == SPIELER2) 
 						&& (this.spielfeld[i+1][j] >= 0 || this.spielfeld[i+1][j] == SPIELER2) 
 						&& (this.spielfeld[i+2][j] >= 0 || this.spielfeld[i+2][j] == SPIELER2))
 					return true;
 
 				// ↓ Vertikal
-				if(j < this.feldgroesse-2 
+				if(j < this.feldgroesse-2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]   >= 0 || this.spielfeld[i][j]   == SPIELER2)
 						&& (this.spielfeld[i][j+1] >= 0 || this.spielfeld[i][j+1] == SPIELER2) 
 						&& (this.spielfeld[i][j+2] >= 0 || this.spielfeld[i][j+2] == SPIELER2))
 					return true;
 
 				// ↘ Diagonal - nach unten
-				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 
+				if(i < this.feldgroesse-2 && j < this.feldgroesse-2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]     >= 0 || this.spielfeld[i][j]     == SPIELER2) 
 						&& (this.spielfeld[i+1][j+1] >= 0 || this.spielfeld[i+1][j+1] == SPIELER2) 
 						&& (this.spielfeld[i+2][j+2] >= 0 || this.spielfeld[i+2][j+2] == SPIELER2))
 					return true;
 				
 				// ↗ Diagonal - nach oben
-				if(i < this.feldgroesse-2 && j > 2
+				if(i < this.feldgroesse-2 && j > 2 // Vorbeugung IndexOutOfBoundsException
 						&& (this.spielfeld[i][j]     > 0 || this.spielfeld[i][j]     == SPIELER2) 
 						&& (this.spielfeld[i+1][j+1] > 0 || this.spielfeld[i+1][j-1] == SPIELER2) 
 						&& (this.spielfeld[i+2][j+2] > 0 || this.spielfeld[i+2][j-2] == SPIELER2))

@@ -73,7 +73,6 @@ class BruchTest {
 	@Test
 	void testEqualsBruch() {
 		try {
-			Bruch b = new Bruch(5, 8);
 			assertTrue(b1.equals(new Bruch(5, 8)));
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -98,7 +97,6 @@ class BruchTest {
 	@Test
 	void testSubtrahiere() {
 			b1.subtrahiere(b2);
-			System.out.println(b1);
 			assertEquals(-47, b1.getZaehler());
 			assertEquals(40, b1.getNenner());
 	}
