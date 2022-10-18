@@ -5,11 +5,9 @@ package net.tfobz.relationship;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 /**
  * @author Rafid Fallaha & Raphael Siller
@@ -23,14 +21,31 @@ class PersonListTest {
 	@BeforeEach
 	void setUp() throws Exception {
 	}
-	
+
+	/*
+	 * Parametizierter Test, was alle Edgecases überprüft ob sie ein IllegalArgumentException werfen.
+	 */
 	@ParameterizedTest
-	@ValueSource 
-	void Person() {
-		
+	@CsvFileSource(resources = "relationshipWrong.txt", delimiterString = "\\n")
+	@SuppressWarnings("unused")
+	void StringToPersonIllegalArgumentException(String person) {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Person p = PersonList.StringToPerson(person);
+		});
+	}
+
+	/**
+	 * Test method for
+	 * {@link net.tfobz.relationship.PersonList#PersonList(java.lang.String)}.
+	 */
+	@ParameterizedTest
+	@CsvFileSource(resources = "relationshipCorrect.txt", delimiterString = "\\n")
+	@SuppressWarnings({"unused"})
+	void readPersonCorrect(String person) {
+		System.out.println(person);
+		Person p = PersonList.StringToPerson(person);
 	}
 	
-
 	/**
 	 * Test method for {@link net.tfobz.relationship.PersonList#PersonList()}.
 	 */
@@ -41,7 +56,8 @@ class PersonListTest {
 	}
 
 	/**
-	 * Test method for {@link net.tfobz.relationship.PersonList#PersonList(java.io.BufferedReader)}.
+	 * Test method for
+	 * {@link net.tfobz.relationship.PersonList#PersonList(java.io.BufferedReader)}.
 	 */
 	@Test
 	@Disabled
@@ -50,7 +66,8 @@ class PersonListTest {
 	}
 
 	/**
-	 * Test method for {@link net.tfobz.relationship.PersonList#PersonList(java.lang.String)}.
+	 * Test method for
+	 * {@link net.tfobz.relationship.PersonList#PersonList(java.lang.String)}.
 	 */
 	@Test
 	@Disabled

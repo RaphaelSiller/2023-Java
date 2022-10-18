@@ -6,10 +6,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import net.gobbz.TestScanner.TestScannerErweitert;
 import net.gobbz.tictactoe.TicTacToe;
 import net.gobbz.tictactoe.gui.TicTacToeJFrame;
-import net.gobbz.tictactoe.server.TicTacToeServer;
 
 public class TicTacToeClient extends TicTacToe {
 	// Variable über welche der TicTacToeClient verwaltet wird. Das Objekt wird
@@ -19,7 +17,7 @@ public class TicTacToeClient extends TicTacToe {
 	@SuppressWarnings("unused")
 	private static int      FELDGROESSE;  // Die vorgegebene Feldgröße des Spielfeldes
 	private static String   ipAdresse;    // Die IP-Adresse an welcher der TicTacToeServer läuft
-	private static int      PORT = 60000; // Port auf welchem der Server läuft
+	private static int      PORT = 65535; // Port auf welchem der Server läuft
 	private TicTacToeJFrame gui;          // Variable für die Gui, damit jede Methode darauf zugreifen kann
 
 	/**

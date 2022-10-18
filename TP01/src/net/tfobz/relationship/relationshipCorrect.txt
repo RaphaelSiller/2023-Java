@@ -1,0 +1,3 @@
+Sepp;MALE;null;null\nRosi;FEMALE;null;null\n
+Rudi;MALE;Rosi;Sepp\nElsa;FEMALE;Rosi;Sepp\nEdit;FEMALE;Rosi;Sepp\n
+Hugo;MALE;Elsa;Rudi\nHerta;FEMALE;Elsa;Rudi

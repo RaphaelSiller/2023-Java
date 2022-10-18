@@ -23,7 +23,7 @@ public class Person {
 	}
 
 	public Person(String name, Gender gender) throws IllegalArgumentException {
-		if (name == null || gender == null)
+		if (name == null || name == "" || gender == null)
 			throw new IllegalArgumentException();
 		this.name = name;
 		this.gender = gender;

@@ -23,7 +23,7 @@ import net.tfobz.relationship.Person.Gender;
  * @author unico
  *
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "static-access"})
 public class PersonTest
 {
 	public static Person p1 = new Person("Gott", Gender.FEMALE);
@@ -100,6 +100,9 @@ public class PersonTest
 	public void creationNameGenderEmpty() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			Person p = new Person(null, null);
+		});
+		assertThrows(IllegalArgumentException.class, () -> {
+			Person p = new Person("", Gender.MALE);
 		});
 	}
 

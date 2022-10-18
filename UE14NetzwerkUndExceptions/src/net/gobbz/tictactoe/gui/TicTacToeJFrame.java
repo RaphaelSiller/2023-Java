@@ -16,6 +16,7 @@ import net.gobbz.tictactoe.*;
  * 
  * @author Michael Wild
  */
+@SuppressWarnings({"serial", "static-access"})
 public class TicTacToeJFrame extends JFrame {
 	/**
 	 * Das Spielfeld der Kn�pfe
@@ -111,6 +112,7 @@ public class TicTacToeJFrame extends JFrame {
 	 * Stellt das Fenster neu dar indem es auch die gesetzten Z�ge in den Kn�pfen
 	 * darstellt
 	 */
+	
 	public void repaint() {
 		for (int i = 0; i < this.tictactoe.getFeldgroesse(); i = i + 1)
 			for (int j = 0; j < this.tictactoe.getFeldgroesse(); j = j + 1) {

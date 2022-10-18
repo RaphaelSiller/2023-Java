@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import net.gobbz.TestScanner.TestScannerErweitert;
 import net.gobbz.tictactoe.TicTacToe;
-import net.gobbz.tictactoe.server.TicTacToeServer;
 
 public class TicTacToeClient extends TicTacToe {
 	// Variable über welche der TicTacToeClient verwaltet wird. Das Objekt wird

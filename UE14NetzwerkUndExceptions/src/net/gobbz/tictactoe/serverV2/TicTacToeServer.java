@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import net.gobbz.TestScanner.TestScannerErweitert;
 import net.gobbz.tictactoe.TicTacToe;
 import net.gobbz.tictactoe.gui.TicTacToeJFrame;
 
