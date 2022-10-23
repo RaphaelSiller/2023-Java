@@ -10,8 +10,6 @@ import javax.swing.event.HyperlinkListener;
 
 @SuppressWarnings("serial")
 /**
- * TODO add load Website when pressing enter
- * TODO Hyperlinks
  * 
  * @author endroidmc
  *
@@ -37,6 +35,7 @@ public class MeinWeb extends JFrame {
 		// Starte maximiert
 //		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+		//Layoutmanager deaktivieren
 		this.getContentPane().setLayout(null);
 
 		// Definiere ToolBar
@@ -112,23 +111,24 @@ public class MeinWeb extends JFrame {
 	}
 
 	private void loadWebsite() {
-		System.out.println("Load Website");
+//		System.out.println("Load Website");
 		try {
 //			throw new IOException();
+			if(url.getText().isEmpty())
+				throw new IOException();
 			// Fügt https:// hinzu, wenn sich dies noch nicht in der url befindet
-			if (url.getText().substring(0, 8).equals("https://"))
+			if (url.getText().length() < 8 || url.getText().substring(0, 8).equals("https://"))
 				website.setPage(url.getText());
-			else if (url.getText().substring(0, 7).equals("http://"))
+			else if (url.getText().length() < 8 ||url.getText().substring(0, 7).equals("http://"))
 				website.setPage(url.getText());
 			else {
 				url.setText("https://" + url.getText());
 				website.setPage(url.getText());
 			}
 			// Setze Titel des Fensters
-			JFrame frame = (JFrame) website.getTopLevelAncestor();
-			frame.setTitle("Mein Web - " + url.getText());
+			this.setTitle("Mein Web - " + url.getText());
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, "Kann den Link nicht aufrufen", "Fehler", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Kann den Link nicht aufrufen", "Fehler", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

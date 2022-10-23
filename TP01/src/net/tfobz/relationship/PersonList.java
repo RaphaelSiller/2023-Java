@@ -44,6 +44,8 @@ public class PersonList extends ArrayList<Person> {
 		 */
 		String[] args = person.split(";");
 		// Kontrolle ob alle Argumente gegeben sind
+		if(person.contains("\\"))
+			throw new IllegalArgumentException("Enthält \\");
 		if (args.length < 4)
 			throw new IllegalArgumentException("Zu wenig Argumente übergeben");
 		if (args.length > 4)

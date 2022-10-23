@@ -26,11 +26,14 @@ class PersonListTest {
 	 * Parametizierter Test, was alle Edgecases überprüft ob sie ein IllegalArgumentException werfen.
 	 */
 	@ParameterizedTest
-	@CsvFileSource(resources = "relationshipWrong.txt", delimiterString = "\\n")
+	@CsvFileSource(resources = "relationshipWrong.txt")
 	@SuppressWarnings("unused")
 	void StringToPersonIllegalArgumentException(String person) {
 		assertThrows(IllegalArgumentException.class, () -> {
-			Person p = PersonList.StringToPerson(person);
+			for(String p1 : person.split("\\n")) {
+//				System.out.println("\t"+ p1);
+				Person p = PersonList.StringToPerson(p1);
+			}
 		});
 	}
 
