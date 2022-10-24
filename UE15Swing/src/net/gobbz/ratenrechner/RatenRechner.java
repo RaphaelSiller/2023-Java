@@ -77,7 +77,7 @@ public class RatenRechner {
 		} else {
 			//KP wos vorschuessig isch
 		}
-		return "" + laufzeitInJahren;
+		return String.format("%.1f", laufzeitInJahren);
 	}
 
 	/**

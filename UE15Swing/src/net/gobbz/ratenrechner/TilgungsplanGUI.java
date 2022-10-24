@@ -9,7 +9,7 @@ public class TilgungsplanGUI extends JFrame {
 	JScrollPane scrollPane = null;
 
 	public TilgungsplanGUI(RatenRechner ratenRechner) {
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.setSize(700, 800);
 		this.setLocation(50, 50);
 		this.setResizable(false);

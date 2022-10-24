@@ -5,9 +5,15 @@ package net.tfobz.relationship;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
+
+import net.tfobz.relationship.Person.Gender;
 
 /**
  * @author Rafid Fallaha & Raphael Siller
@@ -49,33 +55,20 @@ class PersonListTest {
 		Person p = PersonList.StringToPerson(person);
 	}
 	
-	/**
-	 * Test method for {@link net.tfobz.relationship.PersonList#PersonList()}.
-	 */
 	@Test
-	@Disabled
-	void testPersonList() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for
-	 * {@link net.tfobz.relationship.PersonList#PersonList(java.io.BufferedReader)}.
-	 */
-	@Test
-	@Disabled
-	void testPersonListBufferedReader() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for
-	 * {@link net.tfobz.relationship.PersonList#PersonList(java.lang.String)}.
-	 */
-	@Test
-	@Disabled
-	void testPersonListString() {
-		fail("Not yet implemented");
+	public void readPersonsFromFile() {
+		try {
+			PersonList liste = new PersonList("relationship.txt");
+			liste.contains(new Person("Sepp", Gender.MALE));
+			liste.contains(new Person("Rosi", Gender.FEMALE));
+			
+			Person mutter = new Person("Rosi", Gender.FEMALE);
+			Person vater = new Person("Sepp", Gender.MALE);
+			liste.contains(new Person("Rudi", Gender.MALE, mutter, vater, new ArrayList<>()));
+			liste.contains(new Person("Sepp", Gender.MALE, mutter, vater, new ArrayList<>()));
+		} catch (IOException e) {
+			fail("Exception");
+		}
 	}
 
 }

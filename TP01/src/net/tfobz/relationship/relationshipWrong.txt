@@ -22,5 +22,3 @@
 "Sepp;MALE;null;null\nElsa;blabla;null;null"
 "Sepp;MALE;;"
 "Sepp;MALE;null;null\nSepp;MALE;null;null"
-"Sepp;MALE;Resi;null"
-"Sepp;MALE;null;Hugo"
