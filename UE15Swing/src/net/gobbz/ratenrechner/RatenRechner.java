@@ -44,7 +44,7 @@ public class RatenRechner {
 				|| rate == Double.NaN) {
 			throw new RatenRechnerException("Jahreszinssatz, Laufzeit, Raten pro Jahr oder Rate nicht gesetzt");
 		}
-		return "" + barwert;
+		return String.format("%2.f", barwert);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class RatenRechner {
 		double d_barwert;
 		try {
 			d_barwert = Double.parseDouble(barwert);
-		} catch (RatenRechnerException e1) {
+		} catch (NumberFormatException e1) {
 			throw new RatenRechnerException("Kein gültiger Gleitkommawert");
 		}
 		if (d_barwert <= 0)
@@ -106,7 +106,7 @@ public class RatenRechner {
 	 * @param ratenProJahr the ratenProJahr to set
 	 */
 	public void setRatenProJahr(String ratenProJahr) throws RatenRechnerException {
-		int d_ratenProJahr;
+		int d_ratenProJahr = 0;
 		try {
 			d_ratenProJahr = Integer.parseInt(ratenProJahr);
 		} catch (RatenRechnerException e1) {
@@ -166,8 +166,8 @@ public class RatenRechner {
 			restKapital[i] = restKapital[i - 1] - rate + zinsen[i];
 		}
 		//@formatter:off
-		htmlTable = "<h1>TILGUNGSPLAN</h1>\n"
-				+ "<table>\n"
+		htmlTable = "<h2>T I L G U N G S P L A N</h2>\n"
+				+ "<table border=\"1\">\n"
 				+ "	<tr>\n"
 				+ "		<td>Zahlungsart:</td>\n"
 				+ "		<td>" + (nachschuessig ? "Nachschüssig" : "Vorschüssig") + "</td>\n"
@@ -194,7 +194,7 @@ public class RatenRechner {
 				+ "	</tr>\n"
 				+ "</table>\n"
 				+ "<br><br><br>"
-				+ "<table>"
+				+ "<table border=\"1\">"
 				+ "	<tr>"
 				+ "		<th>Periode</th>"
 				+ "		<th>Rate</th>"

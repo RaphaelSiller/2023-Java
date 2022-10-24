@@ -4,6 +4,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class TilgungsplanGUI extends JFrame {
 	JEditorPane editorPane = null;
 	JScrollPane scrollPane = null;
@@ -18,10 +19,30 @@ public class TilgungsplanGUI extends JFrame {
 		editorPane = new JEditorPane();
 		editorPane.setEditable(false);
 		editorPane.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
-		editorPane.setText(ratenRechner.getTilgungsplan());
+		this.setText(ratenRechner.getTilgungsplan());
 		
 		this.scrollPane = new JScrollPane(editorPane);
 		this.add(scrollPane);
 //		System.out.println(ratenRechner.getTilgungsplan());
+	}
+	
+	public TilgungsplanGUI(String tilgungsPlanAsHTML) {
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.setSize(700, 800);
+		this.setLocation(50, 50);
+		this.setResizable(false);
+		this.setTitle("Tilgungsplan");
+		
+		editorPane = new JEditorPane();
+		editorPane.setEditable(false);
+		editorPane.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+		this.setText(tilgungsPlanAsHTML);
+		
+		this.scrollPane = new JScrollPane(editorPane);
+		this.add(scrollPane);
+	}
+	
+	public void setText(String tilgungsPlanAsHTML) {
+		editorPane.setText(tilgungsPlanAsHTML);
 	}
 }
