@@ -16,7 +16,7 @@ public class RatenRechner {
 	public static List<String> possibleRatenProJahr = Arrays.asList("1", "4", "6", "12");
 
 	/**
-	 * @return the nachschuessig
+	 * @return nachschuessig "true" oder "false"
 	 */
 	public String getNachschuessig() /* throws RatenRechnerException */ {
 		return "" + nachschuessig;
@@ -40,20 +40,19 @@ public class RatenRechner {
 	}
 
 	/**
-	 * @return the barwert
+	 * @return Barwert im format "%.2f", eine Zahl mit zwei Dezimalstellen
 	 */
-	public String getBarwert() throws RatenRechnerException {
-		if (barwert <= 0)
-			throw new RatenRechnerException("Barwert ist kleiner gleich 0");
-		if (jahreszinssatz == Double.NaN || laufzeitInJahren == Double.NaN || ratenProJahr == Double.NaN
-				|| rate == Double.NaN) {
-			throw new RatenRechnerException("Jahreszinssatz, Laufzeit, Raten pro Jahr oder Rate nicht gesetzt");
-		}
+	public String getBarwert() {
 		return String.format("%.2f", barwert);
 	}
 
 	/**
-	 * @param barwert the barwert to set
+	 * Setzt Barwert
+	 * 
+	 * @param barwert muss groesser als 0 sein, ansonsten wird eine Exception
+	 *                geworfen
+	 * @throws RatenRechnerException, wenn Zahl nicht richtig zu ein Double geparsed
+	 *                                werden konnte oder barwert kleiner als 0 ist
 	 */
 	public void setBarwert(String barwert) throws RatenRechnerException {
 		double d_barwert;
@@ -68,25 +67,21 @@ public class RatenRechner {
 	}
 
 	/**
-	 * @return the laufzeitInJahren
+	 * @return laufzeitInJahren im Format "%.1f", eine Zahl mit einer
+	 *         Dezimalstelle
 	 */
-	public String getLaufzeitInJahren() /* throws RatenRechnerException */ {
-		double nJahre = 0, uebrigerBetrag = barwert;
-		if (nachschuessig) {
-			while (uebrigerBetrag > 0) {
-				uebrigerBetrag -= rate;
-				uebrigerBetrag += (uebrigerBetrag * jahreszinssatz) / ratenProJahr;
-				nJahre++;
-			}
-			return "" + nJahre;
-		} else {
-			// KP wos vorschuessig isch
-		}
+	public String getLaufzeitInJahren() {
 		return String.format("%.1f", laufzeitInJahren);
 	}
 
 	/**
-	 * @param laufzeitInJahren the laufzeitInJahren to set
+	 * Setzt Laufzeit in Jahren
+	 * 
+	 * @param laufzeitInJahren muss groesser als 0 sein, ansonsten wird eine
+	 *                         Exception geworfen
+	 * @throws RatenRechnerException, wenn Zahl nicht richtig zu ein Double geparsed
+	 *                                werden konnte oder laufzeitInJahren kleiner
+	 *                                als 0 ist
 	 */
 	public void setLaufzeitInJahren(String laufzeitInJahren) throws RatenRechnerException {
 		double d_laufzeitInJahren;
@@ -95,20 +90,25 @@ public class RatenRechner {
 		} catch (NumberFormatException e1) {
 			throw new RatenRechnerException("Kein gültiger Gleitkommawert");
 		}
+		if (d_laufzeitInJahren <= 0)
+			throw new RatenRechnerException("Laufzeit ist kleiner gleich 0");
 		this.laufzeitInJahren = d_laufzeitInJahren;
 	}
 
 	/**
-	 * @return the ratenProJahr
+	 * @return ratenProJahr im format "%.2f", Zahl mit zwei Dezimalstellen
 	 */
-	public String getRatenProJahr() /* throws RatenRechnerException */ {
-		return "" + ratenProJahr;
+	public String getRatenProJahr() {
+		return String.format("%.2f", ratenProJahr);
 	}
 
 	/**
-	 * Mögliche Werte sind 1, 4, 6, 12
+	 * Moegliche Werte sind 1, 4, 6, 12
 	 * 
-	 * @param ratenProJahr the ratenProJahr to set
+	 * @param ratenProJahr
+	 * @throws RatenRechnerException, wenn Zahl nicht richtig in einen Integer
+	 *                                geparsed werden konnte oder ratenProJahr nicht
+	 *                                1, 4, 6 oder 12 ist
 	 */
 	public void setRatenProJahr(String ratenProJahr) throws RatenRechnerException {
 		int d_ratenProJahr = 0;
@@ -124,14 +124,19 @@ public class RatenRechner {
 	}
 
 	/**
-	 * @return the rate
+	 * @return ratenProJahr im format "%.2f", Zahl mit zwei Dezimalstellen
 	 */
-	public String getRate() /* throws RatenRechnerException */ {
-		return "" + rate;
+	public String getRate() {
+		return String.format("%.2f", rate);
 	}
 
 	/**
-	 * @param rate the rate to set
+	 * Setzt Rate
+	 * 
+	 * @param rate
+	 * @throws RatenRechnerException, wenn Zahl nicht richtig in einen Double
+	 *                                geparsed werden konnte oder rate kleiner als 0
+	 *                                ist
 	 */
 	public void setRate(String rate) throws RatenRechnerException {
 		double d_rate;
@@ -140,30 +145,58 @@ public class RatenRechner {
 		} catch (RatenRechnerException e1) {
 			throw new RatenRechnerException("Kein gültiger Gleitkommawert");
 		}
+
+		if (d_rate <= 0)
+			throw new RatenRechnerException("Laufzeit ist kleiner gleich 0");
+
 		this.rate = d_rate;
 	}
 
 	/**
-	 * @return the jahreszinssatz
+	 * Setzt Jahreszinssatz
+	 * 
+	 * @param jahreszinssatz
+	 * @throws RatenRechnerException, wenn Zahl nicht richtig in einen Double
+	 *                                geparsed werden konnte oder jahreszinssatz
+	 *                                kleiner als 0 ist
 	 */
 	public void setJahreszinssatz(String jahreszinssatz) throws RatenRechnerException {
+		double d_jahreszinssatz;
 		try {
-			this.jahreszinssatz = Double.parseDouble(jahreszinssatz) / 100;
+			d_jahreszinssatz = Double.parseDouble(jahreszinssatz) / 100;
 		} catch (NumberFormatException e) {
 			throw new RatenRechnerException("Kein gültiger Gleitkommawert");
 		}
+
+		if (d_jahreszinssatz <= 0)
+			throw new RatenRechnerException("Laufzeit ist kleiner gleich 0");
+
+		this.jahreszinssatz = d_jahreszinssatz;
 	}
 
+	/**
+	 * Erstellt einen String im HTML-Format, welcher einen Tilgungsplan
+	 * repraesentiert.
+	 * 
+	 * @return String im HTML-Format, welcher einen Tilgungsplan repraesentiert
+	 * @throws RatenRechnerException, wenn folgende Werte noch nicht gesetzt wurden:
+	 *                                -barwert
+	 *                                -jahreszinssatz
+	 *                                -ratenProJahr
+	 *                                -rate
+	 */
 	public String getTilgungsplan() throws RatenRechnerException {
 		int    nPerioden     = (int) Math.round(laufzeitInJahren * ratenProJahr);
 		double zinsen[]      = new double[nPerioden + 1];
 		double restKapital[] = new double[nPerioden + 1];
 		String htmlTable     = "";
 
+		// Kontrolliere, ob alle Werte gesetzt wurden
 		if (barwert == Double.NaN || jahreszinssatz == Double.NaN || ratenProJahr == 0 || rate == Double.NaN) {
 			throw new RatenRechnerException("Führen Sie zuerst die Ratenberechnung durch");
 		}
 
+		// Berechne alle Werte
 		restKapital[0] = barwert;
 		zinsen[0] = 0;
 		if (nachschuessig) {
@@ -181,6 +214,7 @@ public class RatenRechner {
 		//@formatter:off
 		// Formatierung zu HTML
 		htmlTable = "<h2>T I L G U N G S P L A N</h2>\n"
+				+ "<!-- Uebersicht der gesetzten Daten -->"
 				+ "<table border=\"1\">\n"
 				+ "	<tr>\n"
 				+ "		<td>Zahlungsart:</td>\n"
@@ -208,6 +242,7 @@ public class RatenRechner {
 				+ "	</tr>\n"
 				+ "</table>\n"
 				+ "<br><br><br>"
+				+ "<!-- Tilgungsplan -->"
 				+ "<table border=\"1\">"
 				+ "	<tr>"
 				+ "		<th>Periode</th>"
@@ -233,9 +268,23 @@ public class RatenRechner {
 		return htmlTable;
 	}
 
-	public String setBarwertBerechnet() throws RatenRechnerException{
-		if(laufzeitInJahren == 0 || !possibleRatenProJahr.contains("" + ratenProJahr) || rate == Double.NaN || jahreszinssatz == Double.NaN)
-			throw new RatenRechnerException("Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Laufzeit In Jahren \n-Raten Pro Jahr \n-Rate \n-Jahreszinssatz");
+	/**
+	 * Berechnet aus den bereits gesetzten Daten den Barwert
+	 * Formeln zur Errechnung der Werte stammt aus Rohmaterialien
+	 * 
+	 * @return neu errechneter Barwert im format "%.2f", eine Zahl mit zwei
+	 *         Dezimalstellen
+	 * @throws RatenRechnerException, wenn folgende Werte noch nicht gesetzt wurden:
+	 *                                -laufzeitInJahren
+	 *                                -ratenProJahr
+	 *                                -rate
+	 *                                -jahreszinssatz
+	 */
+	public String setBarwertBerechnet() throws RatenRechnerException {
+		if (laufzeitInJahren == 0 || !possibleRatenProJahr.contains("" + ratenProJahr) || rate == Double.NaN
+				|| jahreszinssatz == Double.NaN)
+			throw new RatenRechnerException(
+					"Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Laufzeit In Jahren \n-Raten Pro Jahr \n-Rate \n-Jahreszinssatz");
 		final double n = laufzeitInJahren * ratenProJahr;
 		final double q = 1. + (jahreszinssatz / ratenProJahr) / 100.;
 		if (nachschuessig)
@@ -245,10 +294,24 @@ public class RatenRechner {
 		return String.format("%.2f", barwert);
 	}
 
-	public String setLaufzeitInJahrenBerechnet() {
-		if(!possibleRatenProJahr.contains("" + ratenProJahr) || rate == Double.NaN || jahreszinssatz == Double.NaN || barwert == Double.NaN)
-			throw new RatenRechnerException("Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Raten Pro Jahr \n-Rate \n-Jahreszinssatz \n-Barwert");
-		
+	/**
+	 * Berechnet aus den bereits gesetzten Daten die Laufzeit in Jahren
+	 * Formeln zur Errechnung der Werte stammt aus Rohmaterialien
+	 * 
+	 * @return laufzeitInJahren im Format "%.1f", eine Zahl mit einer
+	 *         Dezimalstelle
+	 * @throws RatenRechnerException, wenn folgende Werte noch nicht gesetzt wurden:
+	 *                                -ratenProJahr
+	 *                                -rate
+	 *                                -jahreszinssatz
+	 *                                -barwert
+	 */
+	public String setLaufzeitInJahrenBerechnet() throws RatenRechnerException {
+		if (!possibleRatenProJahr.contains("" + ratenProJahr) || rate == Double.NaN || jahreszinssatz == Double.NaN
+				|| barwert == Double.NaN)
+			throw new RatenRechnerException(
+					"Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Raten Pro Jahr \n-Rate \n-Jahreszinssatz \n-Barwert");
+
 		final double q = 1. + (jahreszinssatz / ratenProJahr) / 100.;
 		if (nachschuessig)
 			laufzeitInJahren = (-Math.log((rate - barwert * (q - 1.)) / rate) / Math.log(q)) / ratenProJahr;
@@ -257,11 +320,23 @@ public class RatenRechner {
 		return String.format("%.1f", laufzeitInJahren);
 	}
 
-	public String setRateBerechnet() {
-		if(laufzeitInJahren == 0 || !possibleRatenProJahr.contains("" + ratenProJahr) || jahreszinssatz == Double.NaN || barwert == Double.NaN)
-			throw new RatenRechnerException("Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Laufzeit in Jahren, \n-Raten Pro Jahr, \n-Jahreszinssatz, \n-Barwert");
-		
-		
+	/**
+	 * Berechnet aus den bereits gesetzten Daten die Rate
+	 * Formeln zur Errechnung der Werte stammt aus Rohmaterialien
+	 * 
+	 * @return ratenProJahr im format "%.2f", Zahl mit zwei Dezimalstellen
+	 * @throws RatenRechnerException, wenn folgende Werte noch nicht gesetzt wurden:
+	 *                                -laufzeitInJahren
+	 *                                -ratenProJahr
+	 *                                -jahreszinssatz
+	 *                                -barwert
+	 */
+	public String setRateBerechnet() throws RatenRechnerException {
+		if (laufzeitInJahren == 0 || !possibleRatenProJahr.contains("" + ratenProJahr) || jahreszinssatz == Double.NaN
+				|| barwert == Double.NaN)
+			throw new RatenRechnerException(
+					"Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Laufzeit in Jahren, \n-Raten Pro Jahr, \n-Jahreszinssatz, \n-Barwert");
+
 		final double n = laufzeitInJahren * ratenProJahr;
 		final double q = 1. + (jahreszinssatz / ratenProJahr) / 100.;
 		if (nachschuessig)
