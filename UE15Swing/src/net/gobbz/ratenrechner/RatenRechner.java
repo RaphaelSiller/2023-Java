@@ -92,7 +92,7 @@ public class RatenRechner {
 		double d_laufzeitInJahren;
 		try {
 			d_laufzeitInJahren = Double.parseDouble(laufzeitInJahren);
-		} catch (RatenRechnerException e1) {
+		} catch (NumberFormatException e1) {
 			throw new RatenRechnerException("Kein gültiger Gleitkommawert");
 		}
 		this.laufzeitInJahren = d_laufzeitInJahren;

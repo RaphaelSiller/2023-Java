@@ -125,7 +125,12 @@ public class RatenRechnerGUI extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				ratenRechner.setBarwert(((JTextComponent) e.getSource()).getText());
+				try {
+					ratenRechner.setBarwert(((JTextComponent) e.getSource()).getText());
+				} catch (RatenRechnerException e2) {
+					if (!((JTextComponent) e.getSource()).getText().isEmpty())
+					JOptionPane.showMessageDialog(null, e2.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		berechneBarwert = new JButton("Berechne Barwert!");
@@ -158,7 +163,13 @@ public class RatenRechnerGUI extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				ratenRechner.setJahreszinssatz(((JTextComponent) e.getSource()).getText());
+				try {
+					ratenRechner.setJahreszinssatz(((JTextComponent) e.getSource()).getText());
+				} catch (RatenRechnerException e2) {
+					if (!((JTextComponent) e.getSource()).getText().isEmpty())
+						JOptionPane.showMessageDialog(null, e2.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
+
 			}
 		});
 
@@ -179,7 +190,12 @@ public class RatenRechnerGUI extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				ratenRechner.setLaufzeitInJahren(((JTextComponent) e.getSource()).getText());
+				try {
+					ratenRechner.setLaufzeitInJahren(((JTextComponent) e.getSource()).getText());
+				} catch (RatenRechnerException e2) {
+					if (!((JTextComponent) e.getSource()).getText().isEmpty())
+						JOptionPane.showMessageDialog(null, e2.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
@@ -195,7 +211,7 @@ public class RatenRechnerGUI extends JFrame {
 				}
 			}
 		});
-		
+
 		panels[4].add(labels[2]);
 		panels[4].add(laufzeitInJahren);
 		panels[4].add(berechneLaufzeitInJahren);
@@ -208,10 +224,15 @@ public class RatenRechnerGUI extends JFrame {
 		ratenProJahr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ratenRechner.setRatenProJahr((String) ratenProJahr.getSelectedItem());
+				try {
+					ratenRechner.setRatenProJahr((String) ratenProJahr.getSelectedItem());
+				} catch (RatenRechnerException e2) {
+					if (!((JTextComponent) e.getSource()).getText().isEmpty())
+						JOptionPane.showMessageDialog(null, e2.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
-		
+
 		panels[5].add(labels[3]);
 		panels[5].add(ratenProJahr);
 		panels[5].add(Box.createRigidArea(ButtonSize));
@@ -229,7 +250,13 @@ public class RatenRechnerGUI extends JFrame {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				ratenRechner.setRate(((JTextComponent) e.getSource()).getText());
+				try {
+					ratenRechner.setRate(((JTextComponent) e.getSource()).getText());
+				} catch (RatenRechnerException e2) {
+					if (!((JTextComponent) e.getSource()).getText().isEmpty())
+						JOptionPane.showMessageDialog(null, e2.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
+
 			}
 		});
 		berechneRate = new JButton("Berechne Rate!");
@@ -244,7 +271,7 @@ public class RatenRechnerGUI extends JFrame {
 				}
 			}
 		});
-		
+
 		panels[6].add(labels[4]);
 		panels[6].add(rate);
 		panels[6].add(berechneRate);
