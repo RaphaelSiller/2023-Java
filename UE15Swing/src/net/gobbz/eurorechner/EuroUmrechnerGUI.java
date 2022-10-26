@@ -35,9 +35,10 @@ public class EuroUmrechnerGUI extends JFrame {
 				jLabels[i].setBounds(25, i * 25 + 35, 195, 25);
 			}
 			jLabels[i].setHorizontalAlignment(SwingConstants.RIGHT);
-
+			jTextFields[i].setHorizontalAlignment(SwingConstants.RIGHT);
+			
 			jTextFields[i].addKeyListener(meinTastaturAbhoerer);
-
+			
 			this.add(jLabels[i]);
 			this.add(jTextFields[i]);
 		}

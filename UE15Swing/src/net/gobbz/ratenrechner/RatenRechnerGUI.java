@@ -1,34 +1,23 @@
 package net.gobbz.ratenrechner;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.LayoutManager;
-import java.awt.TextArea;
-import java.awt.TextComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.text.JTextComponent;
 
 @SuppressWarnings("serial")
@@ -54,8 +43,8 @@ public class RatenRechnerGUI extends JFrame {
 	JTextField laufzeitInJahren         = null;
 	JButton    berechneLaufzeitInJahren = null;
 	// Raten Pro Jahr
-	String[]          possibleRatenProJahr = { "1", "4", "6", "12" };
 	JComboBox<String> ratenProJahr         = null;
+	String[]          possibleRatenProJahr = { "1", "4", "6", "12" };
 	// Rate
 	JTextField rate         = null;
 	JButton    berechneRate = null;
@@ -63,20 +52,10 @@ public class RatenRechnerGUI extends JFrame {
 	JButton zeigeTilgungsplan = null;
 
 	public RatenRechnerGUI() {
-//		ratenRechner = new RatenRechner();
-//		ratenRechner.setBarwert("50000");
-//		ratenRechner.setJahreszinssatz("5");
-//		ratenRechner.setLaufzeitInJahren("10");
-//		ratenRechner.setNachschuessig("true");
-//		ratenRechner.setRate("530.33");
-//		ratenRechner.setRatenProJahr("12");
-//		tilgungsplan = new TilgungsplanGUI(ratenRechner);
-//		tilgungsplan.setVisible(true);
-//		System.out.println(ratenRechner.getTilgungsplan());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(700, 800);
+		this.setSize(500, 400);
 		this.setLocation(50, 50);
-//		this.setResizable(false);
+		this.setResizable(false);
 		this.setTitle("Ratenrechner");
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -95,19 +74,28 @@ public class RatenRechnerGUI extends JFrame {
 		panels[0].add(new JLabel("<html><h1>Ratenrechner</h1></html>"));
 
 		/**
+		 * @formatter:off
+		 * 
 		 * Erstellen aller Komponenten
-		 * Normale Vorgehensweise ist:
+		 * Normale Vorgehensweise beim erstellen
+		 * eines Panels(hier wie eine "Zeile" behandelt) ist:
 		 * -Label erstellen
 		 * -Labelgroesse setzen
 		 * -TextFeld erstellen
 		 * -TextFeldgroesse setzen
+		 * -TextFeld rechtsbündig einstellen
 		 * -Listener für Textfeld setzen
+		 * -Wenn Button vorgesehen ist
 		 * -Button erstellen
 		 * -Buttongroesse setzen
 		 * -ActionListener für Button setzen
+		 * -Komponenten Hinzufügen (Wenn kein Button vorgesehen ist, wird dieser mit
+		 * 							einer Rigid Area, ein Platzhalter, ersetzt)
+		 * @formatter:on
 		 */
 
 		// Vor- Nachschuessig
+		// ButtonChange ist der ActionListener
 		ButtonChange buttonChange = new ButtonChange();
 		vornachschuessigGroup = new ButtonGroup();
 		vorschuessig = new JRadioButton();
@@ -120,6 +108,7 @@ public class RatenRechnerGUI extends JFrame {
 		vornachschuessigGroup.add(nachschuessig);
 		nachschuessig.setSelected(true);
 		ratenRechner.setNachschuessig("true");
+
 		panels[1].add(vorschuessig);
 		panels[1].add(nachschuessig);
 
@@ -128,12 +117,11 @@ public class RatenRechnerGUI extends JFrame {
 		labels[0].setPreferredSize(labelSize);
 		barwert = new JTextField();
 		barwert.setPreferredSize(textFieldSize);
+		barwert.setHorizontalAlignment(SwingConstants.RIGHT);
 		barwert.addKeyListener(new KeyListener() {
-			public void keyTyped(KeyEvent e) {
-			}
+			public void keyTyped(KeyEvent e) {}
 
-			public void keyPressed(KeyEvent e) {
-			}
+			public void keyPressed(KeyEvent e) {}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -142,6 +130,17 @@ public class RatenRechnerGUI extends JFrame {
 		});
 		berechneBarwert = new JButton("Berechne Barwert!");
 		berechneBarwert.setPreferredSize(ButtonSize);
+		berechneBarwert.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					barwert.setText(ratenRechner.setBarwertBerechnet());
+				} catch (RatenRechnerException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+
 		panels[2].add(labels[0]);
 		panels[2].add(barwert);
 		panels[2].add(berechneBarwert);
@@ -151,72 +150,82 @@ public class RatenRechnerGUI extends JFrame {
 		labels[1].setPreferredSize(labelSize);
 		jahreszinssatz = new JTextField();
 		jahreszinssatz.setPreferredSize(textFieldSize);
+		jahreszinssatz.setHorizontalAlignment(SwingConstants.RIGHT);
 		jahreszinssatz.addKeyListener(new KeyListener() {
-			public void keyTyped(KeyEvent e) {
-			}
+			public void keyTyped(KeyEvent e) {}
 
-			public void keyPressed(KeyEvent e) {
-			}
+			public void keyPressed(KeyEvent e) {}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				ratenRechner.setJahreszinssatz(((JTextComponent) e.getSource()).getText());
 			}
 		});
+
 		panels[3].add(labels[1]);
 		panels[3].add(jahreszinssatz);
 		panels[3].add(Box.createRigidArea(ButtonSize));
 
-		// TODO Laufzeit in Jahren
+		// Laufzeit in Jahren
 		labels[2] = new JLabel("Laufzeit in Jahren:");
 		labels[2].setPreferredSize(labelSize);
 		laufzeitInJahren = new JTextField();
 		laufzeitInJahren.setPreferredSize(textFieldSize);
+		laufzeitInJahren.setHorizontalAlignment(SwingConstants.RIGHT);
 		laufzeitInJahren.addKeyListener(new KeyListener() {
-			public void keyTyped(KeyEvent e) {
-			}
+			public void keyTyped(KeyEvent e) {}
 
-			public void keyPressed(KeyEvent e) {
-			}
+			public void keyPressed(KeyEvent e) {}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				ratenRechner.setLaufzeitInJahren(((JTextComponent) e.getSource()).getText());
 			}
 		});
+
 		berechneLaufzeitInJahren = new JButton("Berechne Laufzeit!");
 		berechneLaufzeitInJahren.setPreferredSize(ButtonSize);
+		berechneLaufzeitInJahren.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					laufzeitInJahren.setText(ratenRechner.setLaufzeitInJahrenBerechnet());
+				} catch (RatenRechnerException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
 		panels[4].add(labels[2]);
 		panels[4].add(laufzeitInJahren);
 		panels[4].add(berechneLaufzeitInJahren);
 
-		// TODO Raten pro Jahr
+		// Raten pro Jahr
 		labels[3] = new JLabel("Raten pro Jahr:");
 		labels[3].setPreferredSize(labelSize);
 		ratenProJahr = new JComboBox<String>(possibleRatenProJahr);
 		ratenProJahr.setPreferredSize(textFieldSize);
 		ratenProJahr.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ratenRechner.setRatenProJahr((String) ratenProJahr.getSelectedItem());
 			}
 		});
+		
 		panels[5].add(labels[3]);
 		panels[5].add(ratenProJahr);
 		panels[5].add(Box.createRigidArea(ButtonSize));
 
-		// TODO Rate
+		// Rate
 		labels[4] = new JLabel("Rate:");
 		labels[4].setPreferredSize(labelSize);
 		rate = new JTextField();
 		rate.setPreferredSize(textFieldSize);
+		rate.setHorizontalAlignment(SwingConstants.RIGHT);
 		rate.addKeyListener(new KeyListener() {
-			public void keyTyped(KeyEvent e) {
-			}
+			public void keyTyped(KeyEvent e) {}
 
-			public void keyPressed(KeyEvent e) {
-			}
+			public void keyPressed(KeyEvent e) {}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -225,14 +234,24 @@ public class RatenRechnerGUI extends JFrame {
 		});
 		berechneRate = new JButton("Berechne Rate!");
 		berechneRate.setPreferredSize(ButtonSize);
+		berechneRate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					rate.setText(ratenRechner.setRateBerechnet());
+				} catch (RatenRechnerException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
 		panels[6].add(labels[4]);
 		panels[6].add(rate);
 		panels[6].add(berechneRate);
 
-		// TODO Zeige Tilgungsplan
+		// Zeige Tilgungsplan
 		zeigeTilgungsplan = new JButton("Zeige Tilgungsplan!");
 		zeigeTilgungsplan.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (tilgungsplan == null)
@@ -245,7 +264,7 @@ public class RatenRechnerGUI extends JFrame {
 		});
 		panels[7].add(zeigeTilgungsplan);
 
-		// TODO Alle Panels zum ContentPane hinzufügen
+		// Alle Panels zum ContentPane hinzufügen
 		for (JPanel panel : panels)
 			this.add(panel);
 

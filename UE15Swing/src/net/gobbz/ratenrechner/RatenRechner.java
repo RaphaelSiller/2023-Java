@@ -1,5 +1,8 @@
 package net.gobbz.ratenrechner;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RatenRechner {
 	// Ob Zahlung nach Ende der Vertragsjahre erfolgt
 	private boolean nachschuessig = false;
@@ -9,6 +12,8 @@ public class RatenRechner {
 	private double laufzeitInJahren = Double.NaN;
 	private int    ratenProJahr     = 0;
 	private double rate             = Double.NaN;
+
+	public static List<String> possibleRatenProJahr = Arrays.asList("1", "4", "6", "12");
 
 	/**
 	 * @return the nachschuessig
@@ -44,7 +49,7 @@ public class RatenRechner {
 				|| rate == Double.NaN) {
 			throw new RatenRechnerException("Jahreszinssatz, Laufzeit, Raten pro Jahr oder Rate nicht gesetzt");
 		}
-		return String.format("%2.f", barwert);
+		return String.format("%.2f", barwert);
 	}
 
 	/**
@@ -67,15 +72,15 @@ public class RatenRechner {
 	 */
 	public String getLaufzeitInJahren() /* throws RatenRechnerException */ {
 		double nJahre = 0, uebrigerBetrag = barwert;
-		if(nachschuessig) {
-			while(uebrigerBetrag > 0) {
-				uebrigerBetrag-=rate;
-				uebrigerBetrag+=(uebrigerBetrag*jahreszinssatz)/ratenProJahr;
+		if (nachschuessig) {
+			while (uebrigerBetrag > 0) {
+				uebrigerBetrag -= rate;
+				uebrigerBetrag += (uebrigerBetrag * jahreszinssatz) / ratenProJahr;
 				nJahre++;
 			}
-			return ""+nJahre;
+			return "" + nJahre;
 		} else {
-			//KP wos vorschuessig isch
+			// KP wos vorschuessig isch
 		}
 		return String.format("%.1f", laufzeitInJahren);
 	}
@@ -112,10 +117,10 @@ public class RatenRechner {
 		} catch (RatenRechnerException e1) {
 			throw new RatenRechnerException("Keine gültige Ganzzahl");
 		}
-		if (d_ratenProJahr == 1 || d_ratenProJahr == 4 || d_ratenProJahr == 6 || d_ratenProJahr == 12)
+		if (possibleRatenProJahr.contains("" + d_ratenProJahr))
 			this.ratenProJahr = d_ratenProJahr;
 		else
-			throw new RatenRechnerException("Übergeben Wert steht nicht zur Auswahl");
+			throw new RatenRechnerException("Übergebener Wert steht nicht zur Auswahl");
 	}
 
 	/**
@@ -161,11 +166,20 @@ public class RatenRechner {
 
 		restKapital[0] = barwert;
 		zinsen[0] = 0;
-		for (int i = 1; i < nPerioden + 1; i++) {
-			zinsen[i] = restKapital[i - 1] * jahreszinssatz / ratenProJahr;
-			restKapital[i] = restKapital[i - 1] - rate + zinsen[i];
+		if (nachschuessig) {
+			for (int i = 1; i < nPerioden + 1; i++) {
+				zinsen[i] = restKapital[i - 1] * jahreszinssatz / ratenProJahr;
+				restKapital[i] = restKapital[i - 1] - rate + zinsen[i];
+			}
+		} else {
+			for (int i = 1; i < nPerioden + 1; i++) {
+				zinsen[i] = (restKapital[i - 1] - rate) * jahreszinssatz / ratenProJahr;
+				restKapital[i] = restKapital[i - 1] - rate + zinsen[i];
+			}
 		}
+
 		//@formatter:off
+		// Formatierung zu HTML
 		htmlTable = "<h2>T I L G U N G S P L A N</h2>\n"
 				+ "<table border=\"1\">\n"
 				+ "	<tr>\n"
@@ -217,5 +231,44 @@ public class RatenRechner {
 		htmlTable = htmlTable.concat("</table>");
 
 		return htmlTable;
+	}
+
+	public String setBarwertBerechnet() throws RatenRechnerException{
+		if(laufzeitInJahren == 0 || !possibleRatenProJahr.contains("" + ratenProJahr) || rate == Double.NaN || jahreszinssatz == Double.NaN)
+			throw new RatenRechnerException("Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Laufzeit In Jahren \n-Raten Pro Jahr \n-Rate \n-Jahreszinssatz");
+		final double n = laufzeitInJahren * ratenProJahr;
+		final double q = 1. + (jahreszinssatz / ratenProJahr) / 100.;
+		if (nachschuessig)
+			barwert = rate * (Math.pow(q, n) - 1.) / (Math.pow(q, n) * (q - 1.));
+		else
+			barwert = rate * (Math.pow(q, n) - 1.) / (Math.pow(q, n - 1.) * (q - 1.));
+		return String.format("%.2f", barwert);
+	}
+
+	public String setLaufzeitInJahrenBerechnet() {
+		if(!possibleRatenProJahr.contains("" + ratenProJahr) || rate == Double.NaN || jahreszinssatz == Double.NaN || barwert == Double.NaN)
+			throw new RatenRechnerException("Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Raten Pro Jahr \n-Rate \n-Jahreszinssatz \n-Barwert");
+		
+		final double q = 1. + (jahreszinssatz / ratenProJahr) / 100.;
+		if (nachschuessig)
+			laufzeitInJahren = (-Math.log((rate - barwert * (q - 1.)) / rate) / Math.log(q)) / ratenProJahr;
+		else
+			laufzeitInJahren = (1. - Math.log((q * rate - barwert * (q - 1.)) / rate) / Math.log(q)) / ratenProJahr;
+		return String.format("%.1f", laufzeitInJahren);
+	}
+
+	public String setRateBerechnet() {
+		if(laufzeitInJahren == 0 || !possibleRatenProJahr.contains("" + ratenProJahr) || jahreszinssatz == Double.NaN || barwert == Double.NaN)
+			throw new RatenRechnerException("Bitte kontrollieren Sie, ob Sie die notwendigen Werte eingegeben haben: \n-Laufzeit in Jahren, \n-Raten Pro Jahr, \n-Jahreszinssatz, \n-Barwert");
+		
+		
+		final double n = laufzeitInJahren * ratenProJahr;
+		final double q = 1. + (jahreszinssatz / ratenProJahr) / 100.;
+		if (nachschuessig)
+			rate = barwert * (Math.pow(q, n) * (q - 1.)) / (Math.pow(q, n) - 1.);
+		else
+			rate = barwert * (Math.pow(q, n - 1.) * (q - 1.)) / (Math.pow(q, n) - 1.);
+
+		return String.format("%.2f", rate);
 	}
 }
