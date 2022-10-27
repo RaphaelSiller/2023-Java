@@ -72,6 +72,7 @@ public class TilgungsplanGUI extends JFrame {
 						if(JOptionPane.showConfirmDialog(fileChooser, "Die Datei ist bereits vorhanden. Überschreiben?", "Meldung", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
 							return;
 					}
+					selectedFile.getName();
 					try {
 						FileWriter writer = new FileWriter(selectedFile);
 						writer.write(tilgungsPlanAsHTML);

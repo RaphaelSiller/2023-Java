@@ -63,7 +63,7 @@ public class EuroUmrechnerGUI extends JFrame {
 			try {
 				umrechner.setBetrag(Double.parseDouble(aktuellesTextFeld.getText()));
 			} catch (NumberFormatException ex) {
-
+				
 			}
 
 			for (int i = 0; i < 13; i++) {
