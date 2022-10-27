@@ -50,10 +50,7 @@ public class MeinWeb extends JFrame {
 		this.urlLabel.setLabelFor(this.url);
 		// Wenn Addressleiste ausgewählt wird, wird der ganze Text markiert
 		this.url.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
-
+			public void focusLost(FocusEvent e) {}
 			@Override
 			public void focusGained(FocusEvent e) {
 				url.selectAll();

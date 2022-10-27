@@ -28,11 +28,11 @@ public class EuroUmrechnerGUI extends JFrame {
 			jTextFields[i] = new JTextField();
 
 			if (i == 0) { // Euro
-				jTextFields[i].setBounds(225, 15, 150, 25);
 				jLabels[i].setBounds(25, 15, 195, 25);
+				jTextFields[i].setBounds(225, 15, 150, 25);
 			} else { // Andere Währungen
-				jTextFields[i].setBounds(225, i * 25 + 35, 150, 25);
 				jLabels[i].setBounds(25, i * 25 + 35, 195, 25);
+				jTextFields[i].setBounds(225, i * 25 + 35, 150, 25);
 			}
 			jLabels[i].setHorizontalAlignment(SwingConstants.RIGHT);
 			jTextFields[i].setHorizontalAlignment(SwingConstants.RIGHT);

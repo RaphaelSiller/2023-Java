@@ -75,7 +75,7 @@ public class TilgungsplanGUI extends JFrame {
 					selectedFile.getName();
 					try {
 						FileWriter writer = new FileWriter(selectedFile);
-						writer.write(tilgungsPlanAsHTML);
+						writer.write(editorPane.getText());
 						writer.close();
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(null, "Fehler beim Speichern der Datei", "Fehler", JOptionPane.ERROR_MESSAGE);

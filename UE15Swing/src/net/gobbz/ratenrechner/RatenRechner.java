@@ -241,15 +241,15 @@ public class RatenRechner {
 				+ "		<td>" + String.format("%.2f", rate) + "</td>\n"
 				+ "	</tr>\n"
 				+ "</table>\n"
-				+ "<br><br><br>"
-				+ "<!-- Tilgungsplan -->"
-				+ "<table border=\"1\">"
-				+ "	<tr>"
-				+ "		<th>Periode</th>"
-				+ "		<th>Rate</th>"
-				+ "		<th>Restkapital</th>"
-				+ "		<th>Zinsen</th>"
-				+ "	</tr>";
+				+ "<br><br><br>\n"
+				+ "<!-- Tilgungsplan -->\n"
+				+ "<table border=\"1\">\n"
+				+ "	<tr>\n"
+				+ "		<th>Periode</th>\n"
+				+ "		<th>Rate</th>\n"
+				+ "		<th>Restkapital</th>\n"
+				+ "		<th>Zinsen</th>\n"
+				+ "	</tr>\n";
 		//@formatter:on
 		for (int i = 0; i < nPerioden + 1; i++) {
 //			System.out.format("| %3d | %4.2f | %5.2f | %3.2f |\n", i, rate, restKapital[i], zinsen[i]);
